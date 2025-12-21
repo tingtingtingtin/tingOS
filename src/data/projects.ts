@@ -17,6 +17,7 @@ export const projects: Project[] = [
     title: "Hurdle",
     description: "A spin-off of the popular word game.",
     repoUrl: "https://github.com/tingtingtingtin/hurdle",
+    demoUrl: "hurdle-vert.vercel.app",
   },
   {
     title: "TricksOnIt",

@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { GitCommit, ExternalLink } from 'lucide-react';
+import Link from "next/link";
+import { GitCommit, ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from "date-fns";
 
 interface ProjectCardProps {
   title: string;
@@ -15,22 +15,40 @@ interface ProjectCardProps {
   } | null;
 }
 
-const ProjectCard = ({ title, description, repoUrl, demoUrl, commit }: ProjectCardProps) => {
-  const formattedDate = commit 
+const ProjectCard = ({
+  title,
+  description,
+  repoUrl,
+  demoUrl,
+  commit,
+}: ProjectCardProps) => {
+  const formattedDate = commit
     ? formatDistanceToNow(new Date(commit.date), { addSuffix: true })
-    : '';
+    : "";
 
   return (
-    <div className="flex flex-col h-full p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow dark:bg-gray-900 dark:border-gray-800">
+    <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
       {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
+      <div className="mb-4 flex items-start justify-between">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+          {title}
+        </h3>
         <div className="flex space-x-3">
-          {repoUrl && <Link href={repoUrl} target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">
-            <FaGithub size={20} />
-          </Link>}
+          {repoUrl && (
+            <Link
+              href={repoUrl}
+              target="_blank"
+              className="text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
+            >
+              <FaGithub size={20} />
+            </Link>
+          )}
           {demoUrl && (
-            <Link href={demoUrl} target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">
+            <Link
+              href={demoUrl}
+              target="_blank"
+              className="text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
+            >
               <ExternalLink size={20} />
             </Link>
           )}
@@ -38,31 +56,38 @@ const ProjectCard = ({ title, description, repoUrl, demoUrl, commit }: ProjectCa
       </div>
 
       {/* Description */}
-      <p className="text-gray-600 dark:text-gray-300 mb-6 grow">{description}</p>
+      <p className="mb-6 grow text-gray-600 dark:text-gray-300">
+        {description}
+      </p>
 
       {/* Commit Footer */}
-      {commit && ( 
-      <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
-        <div className="flex items-start space-x-3 text-sm text-gray-500 dark:text-gray-400">
-          <GitCommit className="w-5 h-5 shrink-0 mt-0.5 text-blue-500" />
+      {commit && (
+        <div className="mt-auto border-t border-gray-100 pt-4 dark:border-gray-800">
+          <div className="flex items-start space-x-3 text-sm text-gray-500 dark:text-gray-400">
+            <GitCommit className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
             <div className="flex flex-col">
-            
-              <span className="font-medium text-gray-700 dark:text-gray-200 text-xs uppercase tracking-wider mb-1">
-              Latest Activity
-            </span>
-            
+              <span className="mb-1 text-xs font-medium tracking-wider text-gray-700 uppercase dark:text-gray-200">
+                Latest Activity
+              </span>
+
               <>
-                <Link href={commit.url} target="_blank" className="hover:underline hover:text-blue-500 transition-colors line-clamp-1">
+                <Link
+                  href={commit.url}
+                  target="_blank"
+                  className="line-clamp-1 transition-colors hover:text-blue-500 hover:underline"
+                >
                   {commit.message}
                 </Link>
-                <span className="text-xs text-gray-400 mt-1">{formattedDate}</span>
+                <span className="mt-1 text-xs text-gray-400">
+                  {formattedDate}
+                </span>
               </>
+            </div>
           </div>
         </div>
-      </div>
       )}
     </div>
   );
-}
+};
 
 export default ProjectCard;

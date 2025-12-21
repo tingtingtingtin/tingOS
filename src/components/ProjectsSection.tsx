@@ -1,6 +1,6 @@
-import { getLatestCommit, parseGitHubUrl } from '@/utils/githubCommits';
-import { projects } from '@/data/projects';
-import ProjectCard from '@/components/ProjectCard';
+import { getLatestCommit, parseGitHubUrl } from "@/utils/githubCommits";
+import { projects } from "@/data/projects";
+import ProjectCard from "@/components/ProjectCard";
 
 const ProjectsSection = async () => {
   const projectsWithCommits = await Promise.all(
@@ -20,12 +20,12 @@ const ProjectsSection = async () => {
         ...project,
         commit: commitData,
       };
-    })
+    }),
   );
 
   return (
-    <section className="max-w-5xl mx-auto px-6 pb-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <section className="mx-auto max-w-5xl px-6 pb-20">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {projectsWithCommits.map((project, index) => (
           <ProjectCard
             key={`${project.title}-${index}`}
@@ -39,6 +39,6 @@ const ProjectsSection = async () => {
       </div>
     </section>
   );
-}
+};
 
 export default ProjectsSection;

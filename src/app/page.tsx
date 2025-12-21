@@ -1,5 +1,5 @@
-import GithubProfile from '@/components/GitHubProfile';
-import ProjectsSection from '@/components/ProjectsSection';
+import GithubProfile from "@/components/GitHubProfile";
+import ProjectsSection from "@/components/ProjectsSection";
 
 export default function Home() {
   return (

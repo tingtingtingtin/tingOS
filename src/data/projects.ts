@@ -8,7 +8,8 @@ export interface Project {
 export const projects: Project[] = [
   {
     title: "Garbogotchi",
-    description: "Gamified trash-sorting app with virtual pet mechanics and hardware integration. Won 2nd Place at CitrusHack 2025.",
+    description:
+      "Gamified trash-sorting app with virtual pet mechanics and hardware integration. Won 2nd Place at CitrusHack 2025.",
     repoUrl: "https://github.com/tingtingtingtin/garbogotchi",
     demoUrl: "https://devpost.com/software/garbogotchi",
   },
@@ -33,5 +34,5 @@ export const projects: Project[] = [
     description: "",
     repoUrl: "https://github.com/tingtingtingtin/generositree",
     demoUrl: "https://www.generositree.co/",
-  }
+  },
 ];

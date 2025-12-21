@@ -173,6 +173,47 @@ const Palette = () => {
     c.addEventListener("mouseenter", handleEnter);
     c.addEventListener("mouseleave", handleLeave);
     c.addEventListener("touchmove", handleTouchMove as EventListener);
+    c.addEventListener("touchmove", handleTouchMove as EventListener);
+
+    // ensure drawing stops if pointer released outside canvas
+    const handleWindowUp = () => {
+      stopDrawing();
+    };
+
+    // keyboard shortcuts: E toggles eraser, C clears canvas
+    const handleKeyDown = (ev: KeyboardEvent) => {
+      const target = ev.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          (target as any).isContentEditable)
+      )
+        return;
+      const k = (ev.key || "").toLowerCase();
+      if (k === "e") {
+        setTool((t) => (t === "brush" ? "eraser" : "brush"));
+      } else if (k === "c") {
+        clearCanvas();
+      }
+    };
+
+    window.addEventListener("mouseup", handleWindowUp);
+    window.addEventListener("touchend", handleWindowUp);
+    window.addEventListener("touchcancel", handleWindowUp);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      c.removeEventListener("mousemove", handleMove);
+      c.removeEventListener("mouseenter", handleEnter);
+      c.removeEventListener("mouseleave", handleLeave);
+      c.removeEventListener("touchmove", handleTouchMove as EventListener);
+
+      window.removeEventListener("mouseup", handleWindowUp);
+      window.removeEventListener("touchend", handleWindowUp);
+      window.removeEventListener("touchcancel", handleWindowUp);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
 
     return () => {
       c.removeEventListener("mousemove", handleMove);
@@ -340,20 +381,34 @@ const Palette = () => {
               top: containerRef.current?.getBoundingClientRect().top ?? 0,
             }}
           >
-            <div
-              style={{
-                width: lineWidth,
-                height: lineWidth,
-                marginLeft: -lineWidth / 2,
-                marginTop: -lineWidth / 2,
-                borderRadius: "9999px",
-                background: tool === "eraser" ? "rgba(255,255,255,0.6)" : color,
-                boxShadow:
-                  tool === "eraser"
-                    ? "0 0 0 1px rgba(0,0,0,0.12) inset"
-                    : "0 0 0 4px rgba(0,0,0,0.08)",
-              }}
-            />
+            {(() => {
+              const prefersDark =
+                typeof window !== "undefined" &&
+                (document.documentElement.classList.contains("dark") ||
+                  window.matchMedia?.("(prefers-color-scheme: dark)").matches);
+              const visibleSize = Math.max(8, lineWidth + 6); // slightly wider than linewidth
+              const borderColor = prefersDark
+                ? "rgba(255,255,255,0.85)"
+                : "rgba(0,0,0,0.25)";
+              return (
+                <div
+                  style={{
+                    width: visibleSize,
+                    height: visibleSize,
+                    marginLeft: -visibleSize / 2,
+                    marginTop: -visibleSize / 2,
+                    borderRadius: "9999px",
+                    background:
+                      tool === "eraser" ? "rgba(255,255,255,0.6)" : color,
+                    border: `2px solid ${borderColor}`,
+                    boxShadow:
+                      tool === "eraser"
+                        ? "0 0 0 1px rgba(0,0,0,0.12) inset"
+                        : "0 4px 12px rgba(0,0,0,0.08)",
+                  }}
+                />
+              );
+            })()}
           </motion.div>
         )}
       </div>

@@ -71,6 +71,8 @@ const NotebookDecor = () => {
             </ul>
             <div className="mt-8 opacity-60">
               Feel free to draw using the tools and space provided!
+              <br /> - E to toggle eraser
+              <br /> - C to clear screen
             </div>
           </div>
         </div>

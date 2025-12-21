@@ -10,7 +10,7 @@ export const projects: Project[] = [
   {
     title: "Personal Portfolio",
     description: "This very website!",
-    repoUrl: "https://github.com/tingtingtingtin/portfolio-v2",
+    repoUrl: "https://github.com/tingtingtingtin/tingOS",
     tech: ["Next.js", "Webhooks", "TailwindCSS", "Zustand", "Motion"],
   },
   {

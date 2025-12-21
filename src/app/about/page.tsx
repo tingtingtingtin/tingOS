@@ -1,7 +1,7 @@
 "use client";
 
-import WindowFrame from '@/components/WindowFrame';
-import Palette from '@/components/about/Palette';
+import WindowFrame from "@/components/WindowFrame";
+import Palette from "@/components/about/Palette";
 
 const AboutApp = () => {
   return (
@@ -11,6 +11,6 @@ const AboutApp = () => {
       </div>
     </WindowFrame>
   );
-}
+};
 
 export default AboutApp;

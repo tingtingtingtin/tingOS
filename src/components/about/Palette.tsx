@@ -1,52 +1,52 @@
+/* eslint-disable react-hooks/refs */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 "use client";
 
-
-import { useEffect, useRef, useState } from 'react';
-import { RefreshCw, Eraser } from 'lucide-react';
-import { motion } from 'motion/react';
-import NotebookDecor from './NotebookDecor';
+import { useEffect, useRef, useState } from "react";
+import { RefreshCw, Eraser } from "lucide-react";
+import { motion } from "motion/react";
+import NotebookDecor from "./NotebookDecor";
 
 const COLORS = [
-  '#000000', // Black
-  '#FF3B30', // Red
-  '#4CD964', // Green
-  '#007AFF', // Blue
-  '#FFD60A', // Yellow
-  '#FF2D55', // Pink
-  '#FFFFFF', // White
+  "#000000", // Black
+  "#FF3B30", // Red
+  "#4CD964", // Green
+  "#007AFF", // Blue
+  "#FFD60A", // Yellow
+  "#FF2D55", // Pink
+  "#FFFFFF", // White
 ];
 
 const Palette = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState('#000000');
+  const [color, setColor] = useState("#000000");
   const [lineWidth, setLineWidth] = useState(8);
-  const [tool, setTool] = useState<'brush' | 'eraser'>('brush');
+  const [tool, setTool] = useState<"brush" | "eraser">("brush");
   const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
   const [pointerInside, setPointerInside] = useState(false);
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const resizeCanvas = () => {
       // Preserve current drawing by drawing to a temp canvas first
       const oldW = canvas.width;
       const oldH = canvas.height;
-      const temp = document.createElement('canvas');
+      const temp = document.createElement("canvas");
       temp.width = oldW || 1;
       temp.height = oldH || 1;
-      const tempCtx = temp.getContext('2d');
+      const tempCtx = temp.getContext("2d");
       if (tempCtx && oldW && oldH) {
         try {
           const img = ctx.getImageData(0, 0, oldW, oldH);
@@ -63,8 +63,8 @@ const Palette = () => {
       canvas.height = newH;
 
       // Re-apply styles after resize clears context
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
       ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
 
@@ -80,14 +80,14 @@ const Palette = () => {
 
     // Initial sizing
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    return () => window.removeEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
+    return () => window.removeEventListener("resize", resizeCanvas);
   }, [color, lineWidth]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
@@ -99,15 +99,15 @@ const Palette = () => {
   const moved = useRef(false);
 
   const setCtxForTool = (ctx: CanvasRenderingContext2D) => {
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.lineWidth = lineWidth;
-    if (tool === 'eraser') {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.strokeStyle = 'rgba(0,0,0,1)';
-      ctx.fillStyle = 'rgba(0,0,0,1)';
+    if (tool === "eraser") {
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.strokeStyle = "rgba(0,0,0,1)";
+      ctx.fillStyle = "rgba(0,0,0,1)";
     } else {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = "source-over";
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
     }
@@ -118,19 +118,25 @@ const Palette = () => {
     if (!canvas) return null;
     const rect = canvas.getBoundingClientRect();
     // Touch event
-    if ('touches' in e && e.touches && e.touches[0]) {
-      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    if ("touches" in e && e.touches && e.touches[0]) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+      };
     }
     // Mouse event
     const me = e as MouseEvent;
-    return { x: (me as any).clientX - rect.left, y: (me as any).clientY - rect.top };
+    return {
+      x: (me as any).clientX - rect.left,
+      y: (me as any).clientY - rect.top,
+    };
   };
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const pos = getPosFromMouse(e as any);
@@ -163,16 +169,16 @@ const Palette = () => {
       setCursor({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
     };
 
-    c.addEventListener('mousemove', handleMove);
-    c.addEventListener('mouseenter', handleEnter);
-    c.addEventListener('mouseleave', handleLeave);
-    c.addEventListener('touchmove', handleTouchMove as EventListener);
+    c.addEventListener("mousemove", handleMove);
+    c.addEventListener("mouseenter", handleEnter);
+    c.addEventListener("mouseleave", handleLeave);
+    c.addEventListener("touchmove", handleTouchMove as EventListener);
 
     return () => {
-      c.removeEventListener('mousemove', handleMove);
-      c.removeEventListener('mouseenter', handleEnter);
-      c.removeEventListener('mouseleave', handleLeave);
-      c.removeEventListener('touchmove', handleTouchMove as EventListener);
+      c.removeEventListener("mousemove", handleMove);
+      c.removeEventListener("mouseenter", handleEnter);
+      c.removeEventListener("mouseleave", handleLeave);
+      c.removeEventListener("touchmove", handleTouchMove as EventListener);
     };
   }, []);
 
@@ -180,7 +186,7 @@ const Palette = () => {
     if (!isDrawing) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const pos = getPosFromMouse(e as any);
@@ -204,7 +210,7 @@ const Palette = () => {
       setIsDrawing(false);
       return;
     }
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) {
       setIsDrawing(false);
       return;
@@ -214,8 +220,14 @@ const Palette = () => {
     if (!moved.current && lastPoint.current) {
       setCtxForTool(ctx);
       ctx.beginPath();
-      ctx.arc(lastPoint.current.x, lastPoint.current.y, Math.max(1, lineWidth / 2), 0, Math.PI * 2);
-      if (tool === 'eraser') {
+      ctx.arc(
+        lastPoint.current.x,
+        lastPoint.current.y,
+        Math.max(1, lineWidth / 2),
+        0,
+        Math.PI * 2,
+      );
+      if (tool === "eraser") {
         ctx.fill();
       } else {
         ctx.fill();
@@ -232,26 +244,26 @@ const Palette = () => {
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   };
 
   return (
-    <div className="flex h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
-      
+    <div className="flex h-full bg-gray-50 font-sans text-gray-800 dark:bg-gray-900 dark:text-gray-100">
       {/* --- Sidebar (Tools) --- */}
-      <aside className="w-20 md:w-24 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center py-6 gap-4 bg-white dark:bg-gray-800 z-10">
-        
+      <aside className="z-10 flex w-20 flex-col items-center gap-4 border-r border-gray-200 bg-white py-6 md:w-24 dark:border-gray-800 dark:bg-gray-800">
         {/* Color Swatches */}
         <div className="flex flex-col gap-3">
           {COLORS.map((c) => (
             <button
               key={c}
               onClick={() => setColor(c)}
-              className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
-                color === c ? 'border-gray-400 scale-110 shadow-md' : 'border-transparent'
+              className={`h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 ${
+                color === c
+                  ? "scale-110 border-gray-400 shadow-md"
+                  : "border-transparent"
               }`}
               style={{ backgroundColor: c }}
               title={c}
@@ -259,52 +271,48 @@ const Palette = () => {
           ))}
         </div>
 
-        <div className="w-8 h-px bg-gray-300 dark:bg-gray-700 my-2" />
+        <div className="my-2 h-px w-8 bg-gray-300 dark:bg-gray-700" />
 
         {/* Tools */}
 
         <button
-          onClick={() => setTool((t) => (t === 'brush' ? 'eraser' : 'brush'))}
-          aria-pressed={tool === 'eraser'}
+          onClick={() => setTool((t) => (t === "brush" ? "eraser" : "brush"))}
+          aria-pressed={tool === "eraser"}
           title="Eraser"
-          className={`p-3 rounded-lg transition-transform ${tool === 'eraser' ? 'scale-105 shadow-md bg-gray-100 dark:bg-gray-700' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+          className={`rounded-lg p-3 transition-transform ${tool === "eraser" ? "scale-105 bg-gray-100 shadow-md dark:bg-gray-700" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
         >
           <Eraser size={20} />
         </button>
 
-        <div className="w-full px-3 flex flex-col items-center">
-          <label className="text-xs text-gray-400 mb-2">Size</label>
-          <div className="h-32 flex items-center">
+        <div className="flex w-full flex-col items-center px-3">
+          <label className="mb-2 text-xs text-gray-400">Size</label>
+          <div className="flex h-32 items-center">
             <input
               aria-label="Brush size"
               type="range"
               min={1}
               max={80}
               value={lineWidth}
-              onChange={(v) => setLineWidth(Number((v.target as HTMLInputElement).value))}
-              className="transform -rotate-90 origin-center w-32 mt-1"
+              onChange={(v) =>
+                setLineWidth(Number((v.target as HTMLInputElement).value))
+              }
+              className="mt-1 w-32 origin-center -rotate-90 transform"
             />
           </div>
         </div>
 
         <button
           onClick={clearCanvas}
-          className="p-3 text-gray-500 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors mt-auto mb-20"
+          className="mt-auto mb-20 rounded-lg p-3 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-500"
           title="Clear Canvas"
         >
           <RefreshCw size={20} />
         </button>
-
       </aside>
 
-
       {/* --- Main Canvas Area --- */}
-      <div
-        ref={containerRef}
-        className="flex-1 relative overflow-hidden"
-      >
+      <div ref={containerRef} className="relative flex-1 overflow-hidden">
         <NotebookDecor />
-
 
         {/* 2. Canvas Layer (Overlay) */}
         <canvas
@@ -316,8 +324,8 @@ const Palette = () => {
           onTouchStart={(e) => startDrawing(e)}
           onTouchMove={(e) => draw(e)}
           onTouchEnd={(e) => stopDrawing(e)}
-          className="absolute inset-0 z-10 touch-none cursor-none"
-          style={{ background: 'transparent' }}
+          className="absolute inset-0 z-10 cursor-none touch-none"
+          style={{ background: "transparent" }}
         />
 
         {/* Brush preview cursor */}
@@ -325,10 +333,12 @@ const Palette = () => {
           <motion.div
             initial={false}
             animate={{ x: cursor.x, y: cursor.y }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="pointer-events-none fixed z-50"
-            // eslint-disable-next-line react-hooks/refs
-            style={{ left: (containerRef.current?.getBoundingClientRect().left ?? 0), top: (containerRef.current?.getBoundingClientRect().top ?? 0) }}
+            style={{
+              left: containerRef.current?.getBoundingClientRect().left ?? 0,
+              top: containerRef.current?.getBoundingClientRect().top ?? 0,
+            }}
           >
             <div
               style={{
@@ -336,17 +346,19 @@ const Palette = () => {
                 height: lineWidth,
                 marginLeft: -lineWidth / 2,
                 marginTop: -lineWidth / 2,
-                borderRadius: '9999px',
-                background: tool === 'eraser' ? 'rgba(255,255,255,0.6)' : color,
-                boxShadow: tool === 'eraser' ? '0 0 0 1px rgba(0,0,0,0.12) inset' : '0 0 0 4px rgba(0,0,0,0.08)'
+                borderRadius: "9999px",
+                background: tool === "eraser" ? "rgba(255,255,255,0.6)" : color,
+                boxShadow:
+                  tool === "eraser"
+                    ? "0 0 0 1px rgba(0,0,0,0.12) inset"
+                    : "0 0 0 4px rgba(0,0,0,0.08)",
               }}
             />
           </motion.div>
         )}
-
       </div>
     </div>
   );
-}
+};
 
 export default Palette;

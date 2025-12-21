@@ -1,4 +1,12 @@
-import { Palette, FileText, Terminal, Github, Mail, LucideIcon, Twitter } from "lucide-react";
+import {
+  Palette,
+  FileText,
+  Terminal,
+  Github,
+  Mail,
+  LucideIcon,
+  Twitter,
+} from "lucide-react";
 
 export interface AppConfig {
   id: string;

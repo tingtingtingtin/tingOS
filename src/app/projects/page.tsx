@@ -4,7 +4,7 @@ import WindowFrame from "@/components/WindowFrame";
 
 const ProjectsApp = () => {
   return (
-    <WindowFrame id="projects" title="GitHub - Projects Explorer">
+    <WindowFrame id="projects" title="projects.git - Projects Explorer">
       <div className="p-4 md:p-6">
         <GithubProfile />
         <ProjectsSection />

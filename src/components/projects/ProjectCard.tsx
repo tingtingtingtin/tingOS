@@ -13,6 +13,7 @@ interface ProjectCardProps {
     date: string;
     url: string;
   } | null;
+  tech?: string[];
 }
 
 const ProjectCard = ({
@@ -21,6 +22,7 @@ const ProjectCard = ({
   repoUrl,
   demoUrl,
   commit,
+  tech = [],
 }: ProjectCardProps) => {
   const formattedDate = commit
     ? formatDistanceToNow(new Date(commit.date), { addSuffix: true })
@@ -56,9 +58,23 @@ const ProjectCard = ({
       </div>
 
       {/* Description */}
-      <p className="mb-6 grow text-gray-600 dark:text-gray-300">
+      <p className="mb-4 grow text-gray-600 dark:text-gray-300">
         {description}
       </p>
+
+      {/* Tech pills */}
+      {tech && tech.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {tech.map((t) => (
+            <span
+              key={t}
+              className="inline-flex items-center rounded-lg border border-gray-200 bg-gray-100 px-2 py-1 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Commit Footer */}
       {commit && (

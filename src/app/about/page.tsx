@@ -5,7 +5,7 @@ import Palette from "@/components/about/Palette";
 
 const AboutApp = () => {
   return (
-    <WindowFrame id="about" title="Palette - About Me.can">
+    <WindowFrame id="about" title="About_Me.can">
       <div className="h-full">
         <Palette />
       </div>

@@ -34,6 +34,7 @@ const ProjectsSection = async () => {
             repoUrl={project.repoUrl}
             demoUrl={project.demoUrl}
             commit={project.commit}
+            tech={project.tech}
           />
         ))}
       </div>

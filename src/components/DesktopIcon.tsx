@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { LucideIcon } from 'lucide-react';
-import { useOSStore } from '@/store/osStore';
-
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { LucideIcon } from "lucide-react";
+import { useOSStore } from "@/store/osStore";
 
 interface DesktopIconProps {
   id: string;
@@ -26,8 +25,8 @@ const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
         setIsSelected(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleDoubleClick = () => {
@@ -42,31 +41,28 @@ const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
   };
 
   return (
-    <div 
+    <div
       ref={iconRef}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      className={`
-        w-24 flex flex-col items-center gap-1 p-2 rounded-md cursor-pointer transition-all duration-100 group
-        ${isSelected ? 'bg-blue-500/30 border border-blue-500/50 backdrop-blur-sm' : 'hover:bg-white/10 border border-transparent'}
-      `}
+      className={`group flex w-24 cursor-pointer flex-col items-center gap-1 rounded-md p-2 transition-all duration-100 ${isSelected ? "border border-blue-500/50 bg-blue-500/30 backdrop-blur-sm" : "border border-transparent hover:bg-white/10"} `}
     >
       {/* Icon Container */}
-      <div className="w-12 h-12 flex items-center justify-center filter drop-shadow-lg">
+      <div className="flex h-12 w-12 items-center justify-center drop-shadow-lg filter">
         <Icon size={48} className="text-white" strokeWidth={1.5} />
       </div>
 
       {/* Label */}
-      <span 
-        className={`
-          text-sm text-white font-medium text-center px-1 rounded-sm select-none
-        `}
-        style={{ textShadow: isSelected ? 'none' : '0 1px 2px rgba(0,0,0,0.8)' }}
+      <span
+        className={`rounded-sm px-1 text-center text-sm font-medium text-white select-none`}
+        style={{
+          textShadow: isSelected ? "none" : "0 1px 2px rgba(0,0,0,0.8)",
+        }}
       >
         {label}
       </span>
     </div>
   );
-}
+};
 
 export default DesktopIcon;

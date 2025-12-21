@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface OSState {
   runningApps: string[];
@@ -16,11 +16,13 @@ export const useOSStore = create<OSState>((set, get) => ({
     if (!get().runningApps.includes(id)) {
       set((state) => ({ runningApps: [...state.runningApps, id] }));
     }
-    console.log("App launched")
+    console.log("App launched");
   },
 
   closeApp: (id) => {
-    set((state) => ({ runningApps: state.runningApps.filter((appId) => appId !== id) }));
+    set((state) => ({
+      runningApps: state.runningApps.filter((appId) => appId !== id),
+    }));
   },
 
   isAppRunning: (id) => get().runningApps.includes(id),

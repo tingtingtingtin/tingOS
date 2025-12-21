@@ -14,7 +14,7 @@ interface WindowFrameProps {
 
 export default function WindowFrame({ id, title, children }: WindowFrameProps) {
   const router = useRouter();
-  const { closeApp } = useOSStore();
+  const { closeApp, reducedMotion } = useOSStore();
   const [isVisible, setIsVisible] = useState(true);
 
   const handleClose = () => {
@@ -22,22 +22,37 @@ export default function WindowFrame({ id, title, children }: WindowFrameProps) {
     setTimeout(() => {
       closeApp(id);
       router.push("/");
-    }, 300);
+    }, 100);
+  };
+
+  const variants = {
+    initial: { scale: 0.95, opacity: 0, y: 20 },
+    animate: { scale: 1, opacity: 1, y: 0 },
+    exit: { scale: 0.95, opacity: 0, y: 20 },
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
-       {/* pointer-events-none on container lets clicks pass through to desktop for future transparency
+    <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center">
+      {/* pointer-events-none on container lets clicks pass through to desktop for future transparency
+
           pointer-events-auto on the window itself ensures interaction.
+
        */}
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
-            className="w-full h-full bg-white dark:bg-gray-900 rounded-lg shadow-2xl overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800 pointer-events-auto"
+            initial={reducedMotion ? false : "initial"}
+            animate="animate"
+            exit={reducedMotion ? { opacity: 0 } : "exit"}
+            variants={variants}
+            // Set duration to 0 if motion is reduced
+            transition={{
+              duration: reducedMotion ? 0 : 0.3,
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+            }}
+            className="pointer-events-auto flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
           >
             {/* Header */}
             <Header title={title} onClose={handleClose} />

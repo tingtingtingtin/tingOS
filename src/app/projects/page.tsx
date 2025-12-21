@@ -1,6 +1,6 @@
-import GithubProfile from '@/components/projects/GitHubProfile';
-import ProjectsSection from '@/components/projects/ProjectsSection';
-import WindowFrame from '@/components/WindowFrame';
+import GithubProfile from "@/components/projects/GitHubProfile";
+import ProjectsSection from "@/components/projects/ProjectsSection";
+import WindowFrame from "@/components/WindowFrame";
 
 const ProjectsApp = () => {
   return (
@@ -11,6 +11,6 @@ const ProjectsApp = () => {
       </div>
     </WindowFrame>
   );
-}
+};
 
 export default ProjectsApp;

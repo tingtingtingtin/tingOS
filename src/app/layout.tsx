@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Taskbar from "@/components/Taskbar";
+import Taskbar from "@/components/taskbar/Taskbar";
 import MotionProvider from "@/components/providers/MotionProvider";
 
 const geistSans = Geist({
@@ -26,21 +26,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {/* Background Layer */}
-        <div 
+        <div
           className="fixed inset-0 -z-10 bg-cover bg-center"
-          style={{ 
-            backgroundImage: 'url("https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&q=80&w=3000")',
+          style={{
+            backgroundImage:
+              'url("https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&q=80&w=3000")',
           }}
         >
           <div className="absolute inset-0 bg-black/20" />
         </div>
 
         {/* Client-side Motion Configuration */}
-        <MotionProvider>
-          {children}
-        </MotionProvider>
+        <MotionProvider>{children}</MotionProvider>
 
         <Taskbar />
       </body>

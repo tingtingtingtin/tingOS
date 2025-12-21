@@ -1,4 +1,4 @@
-import { FileText, Terminal, Github, LucideIcon } from 'lucide-react';
+import { FileText, Terminal, Github, Mail, LucideIcon } from "lucide-react";
 
 export interface AppConfig {
   id: string;
@@ -10,24 +10,31 @@ export interface AppConfig {
 
 export const apps: AppConfig[] = [
   {
-    id: 'projects',
-    label: 'Projects',
+    id: "projects",
+    label: "Projects",
     icon: Github,
-    route: '/projects',
+    route: "/projects",
     isPinned: true,
   },
   {
-    id: 'resume',
-    label: 'resume.txt',
+    id: "resume",
+    label: "resume.txt",
     icon: FileText,
-    route: '/resume',
+    route: "/resume",
     isPinned: false,
   },
   {
-    id: 'contact',
-    label: 'Contact',
+    id: "contact",
+    label: "Contact",
+    icon: Mail,
+    route: "/contact",
+    isPinned: true,
+  },
+  {
+    id: "terminal",
+    label: "Terminal",
     icon: Terminal,
-    route: '/contact',
+    route: "/terminal",
     isPinned: true,
   },
 ];

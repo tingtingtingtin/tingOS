@@ -1,31 +1,31 @@
 "use client";
 
-import Link from "next/link";
-import { useOSStore } from "@/store/osStore";
 import { X } from "lucide-react";
 
 interface HeaderProps {
-  id: string;
   title: string;
+  onClose: () => void;
 }
 
-const Header = ({id, title} : HeaderProps) => {
-  const { closeApp } = useOSStore();
+const Header = ({ title, onClose }: HeaderProps) => {
   return (
-    <header className="bg-gray-200 dark:bg-gray-800 p-2 flex justify-between items-center border-b border-gray-300 dark:border-gray-700">
-        <div className="text-sm font-semibold text-gray-600 dark:text-gray-300 px-2">
+    <header 
+      // TODO: handle class for dragability
+      className="bg-gray-200 dark:bg-gray-800 p-2 flex justify-between items-center border-b border-gray-300 dark:border-gray-700 select-none"
+    >
+        <div className="text-sm font-semibold text-gray-600 dark:text-gray-300 px-2 flex items-center gap-2">
+          {/* TODO: Add a small icon here based on the app later */}
           {title}
         </div>
-        <Link 
-          href="/" 
-          className="p-1 hover:bg-red-500 hover:text-white rounded transition-colors text-gray-500"
-          title="Close App (Return to Desktop)"
-          onClick={() => closeApp(id)}
+        <button
+          onClick={onClose}
+          className="p-1 hover:bg-red-500 hover:text-white rounded transition-colors text-gray-500 flex items-center justify-center"
+          title="Close App"
         >
           <X size={18} />
-        </Link>
-      </header>
+        </button>
+    </header>
   )
 }
 
-export default Header
+export default Header;

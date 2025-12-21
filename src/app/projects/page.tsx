@@ -1,16 +1,15 @@
-import GithubProfile from '@/components/GitHubProfile';
-import ProjectsSection from '@/components/ProjectsSection';
-import Header from '@/components/Header';
+import GithubProfile from '@/components/projects/GitHubProfile';
+import ProjectsSection from '@/components/projects/ProjectsSection';
+import WindowFrame from '@/components/WindowFrame';
 
 const ProjectsApp = () => {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
-      <Header id="projects" title='Project Explorer'/>
-      <div className="flex-1 overflow-auto">
+    <WindowFrame id="projects" title="GitHub - Projects Explorer">
+      <div className="p-4 md:p-6">
         <GithubProfile />
         <ProjectsSection />
       </div>
-    </div>
+    </WindowFrame>
   );
 }
 

@@ -1,6 +1,6 @@
 import { getLatestCommit, parseGitHubUrl } from "@/utils/githubCommits";
 import { projects } from "@/data/projects";
-import ProjectCard from "@/components/ProjectCard";
+import ProjectCard from "@/components/projects/ProjectCard";
 
 const ProjectsSection = async () => {
   const projectsWithCommits = await Promise.all(

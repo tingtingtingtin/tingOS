@@ -2,30 +2,29 @@
 
 import DesktopIcon from '@/components/DesktopIcon';
 import { apps } from '@/data/apps';
+import { motion } from "motion/react";
 
 const Desktop = () => {
   return (
-    <main 
-      className="min-h-screen w-full bg-cover bg-center overflow-hidden relative selection:bg-transparent"
-      style={{ 
-        backgroundImage: 'url("https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&q=80&w=3000")',
-      }}
-    >
-      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+    <main className="h-full w-full p-4">
 
       {/* Icon Grid Area */}
-      <div className="relative z-10 p-4 grid grid-flow-col auto-rows-[110px] gap-4 content-start items-start w-fit">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.1 }}
+        className="relative z-10 p-4 grid grid-flow-col auto-rows-[110px] gap-4 content-start items-start w-fit"
+      >
         {apps.map((app) => (
-             <DesktopIcon
-               key={app.id}
-               id={app.id}
-               label={app.label} 
-               icon={app.icon} 
-               route={app.route} 
-             />
+          <DesktopIcon
+        key={app.id}
+        id={app.id}
+        label={app.label}
+        icon={app.icon}
+        route={app.route}
+          />
         ))}
-
-      </div>
+      </motion.div>
     </main>
   );
 }

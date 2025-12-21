@@ -1,9 +1,9 @@
 "use client";
 
 import DesktopIcon from '@/components/DesktopIcon';
-import { FileText, Terminal, Github } from 'lucide-react';
+import { apps } from '@/data/apps';
 
-export default function Desktop() {
+const Desktop = () => {
   return (
     <main 
       className="min-h-screen w-full bg-cover bg-center overflow-hidden relative selection:bg-transparent"
@@ -15,26 +15,19 @@ export default function Desktop() {
 
       {/* Icon Grid Area */}
       <div className="relative z-10 p-4 grid grid-flow-col auto-rows-[110px] gap-4 content-start items-start w-fit">
-        
-        <DesktopIcon 
-          label="Projects" 
-          icon={Github} 
-          route="/projects" 
-        />
-
-        <DesktopIcon 
-          label="resume.txt" 
-          icon={FileText} 
-          route="/resume" 
-        />
-        
-        <DesktopIcon 
-          label="Terminal" 
-          icon={Terminal} 
-          route="/contact" 
-        />
+        {apps.map((app) => (
+             <DesktopIcon
+               key={app.id}
+               id={app.id}
+               label={app.label} 
+               icon={app.icon} 
+               route={app.route} 
+             />
+        ))}
 
       </div>
     </main>
   );
 }
+
+export default Desktop;

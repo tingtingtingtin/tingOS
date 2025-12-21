@@ -3,17 +3,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { LucideIcon } from 'lucide-react';
+import { useOSStore } from '@/store/osStore';
+
 
 interface DesktopIconProps {
+  id: string;
   label: string;
   icon: LucideIcon;
   route: string;
 }
 
-const DesktopIcon = ({ label, icon: Icon, route }: DesktopIconProps) => {
+const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
   const iconRef = useRef<HTMLDivElement>(null);
+  const { launchApp } = useOSStore();
 
   // Handle clicking "outside" to deselect
   useEffect(() => {
@@ -27,7 +31,10 @@ const DesktopIcon = ({ label, icon: Icon, route }: DesktopIconProps) => {
   }, []);
 
   const handleDoubleClick = () => {
-    router.push(route);
+    launchApp(id);
+    setTimeout(() => {
+      router.push(route);
+    }, 50);
   };
 
   const handleClick = () => {

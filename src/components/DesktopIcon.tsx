@@ -16,9 +16,8 @@ const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
   const iconRef = useRef<HTMLDivElement>(null);
-  const { launchApp } = useOSStore();
+  const { launchApp, darkMode } = useOSStore();
 
-  // Handle clicking "outside" to deselect
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (iconRef.current && !iconRef.current.contains(event.target as Node)) {
@@ -45,18 +44,30 @@ const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
       ref={iconRef}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      className={`group flex w-24 cursor-pointer flex-col items-center gap-1 rounded-md p-2 transition-all duration-100 ${isSelected ? "border border-blue-500/50 bg-blue-500/30 backdrop-blur-sm" : "border border-transparent hover:bg-white/10"} `}
+      className={`group flex w-24 cursor-pointer flex-col items-center gap-1 rounded-md p-2 transition-all duration-100 ${
+        isSelected
+          ? "border border-blue-500/50 bg-blue-500/30 backdrop-blur-sm"
+          : "border border-transparent hover:bg-black/5 dark:hover:bg-white/10"
+      }`}
     >
-      {/* Icon Container */}
       <div className="flex h-12 w-12 items-center justify-center drop-shadow-lg filter">
-        <Icon size={48} className="text-white" strokeWidth={1.5} />
+        <Icon
+          size={48}
+          className={darkMode ? "text-white" : "text-gray-800"}
+          strokeWidth={1.5}
+        />
       </div>
 
-      {/* Label */}
       <span
-        className={`rounded-sm px-1 text-center text-sm font-medium text-white select-none`}
+        className={`rounded-sm px-1 text-center text-sm font-medium select-none ${
+          darkMode ? "text-white" : "text-gray-900"
+        }`}
         style={{
-          textShadow: isSelected ? "none" : "0 1px 2px rgba(0,0,0,0.8)",
+          textShadow: isSelected
+            ? "none"
+            : darkMode
+              ? "0 1px 2px rgba(0,0,0,0.8)"
+              : "0 1px 2px rgba(255,255,255,0.5)",
         }}
       >
         {label}

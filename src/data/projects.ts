@@ -33,7 +33,7 @@ export const projects: Project[] = [
     title: "Hurdle",
     description: "A spin-off of the popular word game, Wordle.",
     repoUrl: "https://github.com/tingtingtingtin/hurdle",
-    demoUrl: "hurdle-vert.vercel.app",
+    demoUrl: "https://hurdle-vert.vercel.app",
     tech: ["Vite", "React", "Express"],
   },
   {

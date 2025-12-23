@@ -15,7 +15,7 @@ const C = {
 
 export const formatPrompt = (path: string[]) => {
   const pathString = path.length === 0 ? "~" : "~/" + path.join("/");
-  return `${C.Green}guest@ting-pc${C.Reset}:${C.Blue}${pathString}${C.Reset}$ `;
+  return `${C.Green}guest@tingOS${C.Reset}:${C.Blue}${pathString}${C.Reset}$ `;
 };
 
 // Helper: Ensure all newlines include a Carriage Return (\r)

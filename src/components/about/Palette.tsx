@@ -474,7 +474,11 @@ const Palette = () => {
           <motion.div
             initial={false}
             animate={{ x: cursor.x, y: cursor.y }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{
+              type: "tween",
+              ease: "linear",
+              duration: 0,
+            }}
             className="pointer-events-none fixed z-50 hidden md:block"
             style={{
               left: containerRef.current?.getBoundingClientRect().left ?? 0,

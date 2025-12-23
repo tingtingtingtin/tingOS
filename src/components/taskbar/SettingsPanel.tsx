@@ -6,7 +6,7 @@ interface SettingsPanelProps {
   toggleMotion: () => void;
   darkMode: boolean;
   toggleDarkMode: () => void;
-  isMobile?: boolean; 
+  isMobile?: boolean;
 }
 
 const SettingsPanel = ({

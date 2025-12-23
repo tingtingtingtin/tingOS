@@ -48,9 +48,9 @@ const DesktopIcon = ({
 
   const handleInteraction = () => {
     if (window.innerWidth < 768) {
-        executeOpen();
+      executeOpen();
     } else {
-        setIsSelected(true);
+      setIsSelected(true);
     }
   };
 
@@ -67,15 +67,17 @@ const DesktopIcon = ({
     >
       <div className="flex h-14 w-14 items-center justify-center drop-shadow-lg filter">
         <Icon
-          size={52} 
-          className={`${darkMode ? "text-white" : "text-gray-800"} md:w-12 md:h-12`}
+          size={52}
+          className={`${darkMode ? "text-white" : "text-gray-800"} md:h-12 md:w-12`}
           strokeWidth={1.5}
         />
       </div>
 
       <span
-        className={`rounded-sm px-1 text-center text-xs md:text-sm font-medium select-none truncate w-full ${
-          darkMode ? "text-white" : "text-gray-900 drop-shadow-white drop-shadow-2xl"
+        className={`w-full truncate rounded-sm px-1 text-center text-xs font-medium select-none md:text-sm ${
+          darkMode
+            ? "text-white"
+            : "text-gray-900 drop-shadow-2xl drop-shadow-white"
         }`}
         style={{
           textShadow: isSelected

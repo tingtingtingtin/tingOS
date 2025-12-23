@@ -298,7 +298,7 @@ export default function BootManager() {
                             setPassword(e.target.value);
                             setLoginError(false);
                           }}
-                          className={`w-full rounded-md border bg-black/40 px-4 py-3 pr-12 text-white placeholder-gray-400 backdrop-blur-md transition-all outline-none focus:bg-black/60  ${loginError ? "border-red-500/80" : "border-white/10 focus:border-blue-500/50"} `}
+                          className={`w-full rounded-md border bg-black/40 px-4 py-3 pr-12 text-white placeholder-gray-400 backdrop-blur-md transition-all outline-none focus:bg-black/60 ${loginError ? "border-red-500/80" : "border-white/10 focus:border-blue-500/50"} `}
                         />
                         <button
                           type="submit"

@@ -18,7 +18,11 @@ const Wallpaper = () => {
       }}
     >
       <div
-        className={`absolute inset-0 transition-colors duration-700 ${darkMode ? "bg-black/20" : "bg-white/10"}`}
+        className={`absolute inset-0 transition-opacity duration-700 ${
+          darkMode
+            ? "bg-black/40" // Darken for dark mode
+            : "bg-white/50 bg-linear-to-t from-white/10 via-transparent to-white/30 md:bg-transparent" // Soft contrast for light mode
+        }`}
       />
     </div>
   );

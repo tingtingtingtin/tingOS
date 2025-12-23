@@ -41,7 +41,6 @@ export default function BootManager() {
       setView("booted");
     }
 
-    // Client-side time init
     setTime(new Date());
     const timer = setInterval(() => setTime(new Date()), 1000);
 
@@ -299,7 +298,7 @@ export default function BootManager() {
                             setPassword(e.target.value);
                             setLoginError(false);
                           }}
-                          className={`w-full rounded-md border bg-black/40 px-4 py-3 pr-12 text-white placeholder-gray-400 backdrop-blur-md transition-all outline-none focus:border-blue-500/50 focus:bg-black/60 ${loginError ? "border-red-500/50" : "border-white/10"} `}
+                          className={`w-full rounded-md border bg-black/40 px-4 py-3 pr-12 text-white placeholder-gray-400 backdrop-blur-md transition-all outline-none focus:bg-black/60 ${loginError ? "border-red-500/80" : "border-white/10 focus:border-blue-500/50"} `}
                         />
                         <button
                           type="submit"
@@ -314,12 +313,12 @@ export default function BootManager() {
               </AnimatePresence>
             </div>
 
-            {/* User Switcher (Disabled while booting) */}
+            {/* User Switcher */}
             {!isBooting && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute bottom-8 left-8 flex flex-col items-start gap-4 md:fixed md:top-auto md:right-8 md:bottom-8 md:left-auto"
+                className="absolute -bottom-[15vh] flex flex-col items-start gap-4 md:fixed md:top-auto md:right-8 md:bottom-8 md:left-auto"
               >
                 {selectedUser === "admin" && (
                   <div

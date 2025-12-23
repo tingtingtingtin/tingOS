@@ -35,7 +35,7 @@ const DesktopIcon = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDoubleClick = () => {
+  const executeOpen = () => {
     if (url) {
       window.open(url, "_blank")?.focus();
       return;
@@ -46,32 +46,38 @@ const DesktopIcon = ({
     }, 50);
   };
 
-  const handleClick = () => {
-    setIsSelected(true);
+  const handleInteraction = () => {
+    if (window.innerWidth < 768) {
+      executeOpen();
+    } else {
+      setIsSelected(true);
+    }
   };
 
   return (
     <div
       ref={iconRef}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      className={`group flex w-24 cursor-pointer flex-col items-center gap-1 rounded-md p-2 transition-all duration-100 ${
+      onClick={handleInteraction}
+      onDoubleClick={executeOpen}
+      className={`group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-md p-2 transition-all duration-100 ${
         isSelected
           ? "border border-blue-500/50 bg-blue-500/30 backdrop-blur-sm"
           : "border border-transparent hover:bg-black/5 dark:hover:bg-white/10"
       }`}
     >
-      <div className="flex h-12 w-12 items-center justify-center drop-shadow-lg filter">
+      <div className="flex h-14 w-14 items-center justify-center drop-shadow-lg filter">
         <Icon
-          size={48}
-          className={darkMode ? "text-white" : "text-gray-800"}
+          size={52}
+          className={`${darkMode ? "text-white" : "text-gray-800"} md:h-12 md:w-12`}
           strokeWidth={1.5}
         />
       </div>
 
       <span
-        className={`rounded-sm px-1 text-center text-sm font-medium select-none ${
-          darkMode ? "text-white" : "text-gray-900"
+        className={`w-full truncate rounded-sm px-1 text-center text-xs font-medium select-none md:text-sm ${
+          darkMode
+            ? "text-white"
+            : "text-gray-900 drop-shadow-2xl drop-shadow-white"
         }`}
         style={{
           textShadow: isSelected

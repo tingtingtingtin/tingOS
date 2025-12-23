@@ -3,9 +3,9 @@ import {
   FileText,
   Terminal,
   Github,
-  Mail,
   LucideIcon,
   Twitter,
+  MessageCircle,
 } from "lucide-react";
 
 export interface AppConfig {
@@ -48,7 +48,7 @@ export const apps: AppConfig[] = [
   {
     id: "contact",
     label: "Contact",
-    icon: Mail,
+    icon: MessageCircle,
     route: "/contact",
     isPinned: true,
   },

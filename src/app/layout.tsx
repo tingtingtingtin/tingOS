@@ -4,6 +4,8 @@ import "./globals.css";
 import Taskbar from "@/components/taskbar/Taskbar";
 import MotionProvider from "@/components/providers/MotionProvider";
 import { Analytics } from "@vercel/analytics/next";
+import ThemeProvider from "@/components/providers/ThemeProvider";
+import Wallpaper from "@/components/Wallpaper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,20 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div
-          className="fixed inset-0 -z-10 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&q=80&w=3000")',
-          }}
-        >
-          <div className="absolute inset-0 bg-black/20" />
-        </div>
         <MotionProvider>
-          {children}
-          <Analytics />
+          <ThemeProvider>
+            <Wallpaper />
+            {children}
+            <Taskbar />
+            <Analytics />
+          </ThemeProvider>
         </MotionProvider>
-        <Taskbar />
       </body>
     </html>
   );

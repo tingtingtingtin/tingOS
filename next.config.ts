@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "play-lh.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "brand.ucr.edu",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   devIndicators: false,

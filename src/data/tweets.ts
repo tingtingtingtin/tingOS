@@ -20,7 +20,8 @@ export const tweets: TweetData[] = [
   {
     id: "fanalyze",
     type: "experience",
-    avatar: "https://github.com/fanalyze.png",
+    avatar:
+      "https://play-lh.googleusercontent.com/zT8d-ZCQvoAEqrU91c7rDN_5Gm0fg_UoQbHOrR6K1iGHfbgFmbLOYsHRe4uDLfbvdIU=w240-h480-rw",
     name: "Fanalyze",
     handle: "@fanalyze",
     role: "Software Engineering Intern",
@@ -44,7 +45,7 @@ export const tweets: TweetData[] = [
     handle: "@cutiehack_ucr",
     role: "Software Engineering Lead",
     date: "Jun 2025 - Nov 2025",
-    content: "Leading the tech team for 200+ attendees is fr no joke",
+    content: "Leading a tech team of 10+ devs for 200+ attendees is fr no joke",
     details: [
       "Led full-stack development for 200+ attendee hackathon platform, managing cross-platform compatibility and deployment",
       "Achieved 99.9% uptime for participant login and check-in during peak event traffic by resolving critical production bugs",
@@ -73,7 +74,8 @@ export const tweets: TweetData[] = [
   {
     id: "ucr-ula",
     type: "experience",
-    avatar: "https://github.com/ucr.png",
+    avatar:
+      "https://brand.ucr.edu/sites/default/files/styles/cta_image_small/public/logos-home.jpg?h=2a479378&itok=4CoeTdxL",
     name: "UCR CS Department",
     handle: "@UCRiverside",
     role: "Undergraduate Learning Assistant",
@@ -90,7 +92,8 @@ export const tweets: TweetData[] = [
   {
     id: "ucr-ms",
     type: "education",
-    avatar: "https://github.com/ucr.png",
+    avatar:
+      "https://brand.ucr.edu/sites/default/files/styles/cta_image_small/public/logos-home.jpg?h=2a479378&itok=4CoeTdxL",
     name: "UC Riverside",
     handle: "@UCRiverside",
     role: "M.S. Computer Science",
@@ -105,7 +108,8 @@ export const tweets: TweetData[] = [
   {
     id: "ucr-bs",
     type: "education",
-    avatar: "https://github.com/ucr.png",
+    avatar:
+      "https://brand.ucr.edu/sites/default/files/styles/cta_image_small/public/logos-home.jpg?h=2a479378&itok=4CoeTdxL",
     name: "UC Riverside",
     handle: "@UCRiverside",
     role: "B.S. Computer Science",

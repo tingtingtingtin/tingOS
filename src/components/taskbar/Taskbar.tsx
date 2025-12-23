@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { apps } from "@/data/apps";
 import { useOSStore } from "@/store/osStore";
-import { FaHome, FaCog, FaQuestionCircle } from "react-icons/fa";
+import { FaHome, FaCog, FaQuestionCircle, FaLock } from "react-icons/fa";
 import TimeDisplay from "./TimeDisplay";
 import SettingsPanel from "./SettingsPanel";
 
@@ -33,6 +33,11 @@ const Taskbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLock = () => {
+    sessionStorage.removeItem("tingOS_unlocked");
+    window.dispatchEvent(new Event("os-lock"));
+  };
 
   const taskbarApps = apps.filter(
     (app) => app.isPinned || runningApps.includes(app.id),
@@ -98,11 +103,23 @@ const Taskbar = () => {
         })}
       </div>
 
-      {/* Right Side (help + settings moved left of time) */}
+      {/* Right Side */}
       <div
         className="ml-auto flex items-center text-sm font-medium text-gray-900 tabular-nums dark:text-white"
         ref={settingsRef}
       >
+        <div className="group relative">
+          <button
+            className="flex h-10 w-10 items-center justify-center rounded text-gray-900 transition-colors hover:bg-black/5 dark:text-white dark:hover:bg-white/10"
+            onClick={handleLock}
+          >
+            <FaLock size={16} />
+          </button>
+          <span className="pointer-events-none absolute -top-10 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+            Lock System
+          </span>
+        </div>
+
         {/* Help Button */}
         <div className="group relative">
           <button

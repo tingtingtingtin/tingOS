@@ -52,15 +52,18 @@ const Tweet = ({ data }: { data: TweetData }) => {
           </div>
 
           {/* Body */}
-          <p className="mb-3 text-base leading-normal whitespace-pre-wrap text-gray-900 dark:text-white">
+          <p className="mb-1 text-base leading-normal whitespace-pre-wrap text-gray-900 dark:text-white">
             {data.content}
+          </p>
+          <p className="mb-2 text-sm leading-normal text-blue-600 hover:underline">
+            Show More
           </p>
 
           {/* Footer Actions (Visual only) */}
           <div className="mt-3 flex max-w-md justify-between text-sm text-gray-500">
             <div className="group flex items-center gap-2 transition-colors hover:text-blue-500">
               <div className="rounded-full p-2 group-hover:bg-blue-500/10">
-                <MessageCircle size={18} />
+                <MessageCircle size={16} />
               </div>
               <span>{data.stats.replies}</span>
             </div>

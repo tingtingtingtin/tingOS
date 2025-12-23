@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import Wallpaper from "@/components/Wallpaper";
 import TitleBlinker from "@/components/TitleBlinker";
+import BootManager from "@/components/BootManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({
       >
         <MotionProvider>
           <ThemeProvider>
+            <BootManager />
             <TitleBlinker />
             <Wallpaper />
             {children}

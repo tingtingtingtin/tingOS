@@ -57,8 +57,13 @@ const TweetDetail = async ({ params }: PageProps) => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-base font-bold text-gray-900 dark:text-white">
-                {tweet.name}
+              <span className="flex flex-col md:flex-row">
+                <span className="text-base font-bold text-gray-900 dark:text-white">
+                  {tweet.name}
+                </span>
+                <p className="mb-1 text-base text-gray-500 md:ml-4">
+                  {tweet.role}
+                </p>
               </span>
               <span className="text-sm text-gray-500">{tweet.handle}</span>
             </div>
@@ -71,9 +76,8 @@ const TweetDetail = async ({ params }: PageProps) => {
 
           {/* Timestamp & Role */}
           <div className="mb-4 border-b border-gray-200 pb-4 dark:border-gray-800">
-            <p className="mb-1 text-base text-gray-500">{tweet.role}</p>
             <p className="text-sm text-gray-500">
-              {tweet.date} · Twitter for Resume
+              {tweet.date} · Xperiences for LG Smart Fridge
             </p>
           </div>
 
@@ -108,8 +112,9 @@ const TweetDetail = async ({ params }: PageProps) => {
           </div>
         </div>
 
-        {/* The "Replies" (Resume Details) */}
+        {/* The "Replies" */}
         <div className="px-4">
+          <h2 className="text-lg font-bold">Details</h2>
           {tweet.details.map((detail, index) => (
             <div
               key={index}

@@ -6,7 +6,7 @@ const ContactLinks = () => (
     <h3 className="mb-3 text-xs font-bold tracking-widest text-gray-400 uppercase">
       Direct Contact
     </h3>
-    <div className="flex gap-4">
+    <div className="flex md:flex-row flex-col md:gap-4 gap-2">
       <a
         href="mailto:twu062604@gmail.com?subject=Inquiry&body=Message%20details"
         className="flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"

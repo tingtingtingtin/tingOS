@@ -117,14 +117,12 @@ const Palette = () => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
     const rect = canvas.getBoundingClientRect();
-    // Touch event
     if ("touches" in e && e.touches && e.touches[0]) {
       return {
         x: e.touches[0].clientX - rect.left,
         y: e.touches[0].clientY - rect.top,
       };
     }
-    // Mouse event
     const me = e as MouseEvent;
     return {
       x: (me as any).clientX - rect.left,

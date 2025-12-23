@@ -12,7 +12,7 @@ interface WindowFrameProps {
   children: React.ReactNode;
 }
 
-const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
+export default function WindowFrame({ id, title, children }: WindowFrameProps) {
   const router = useRouter();
   const { closeApp, reducedMotion } = useOSStore();
   const [isVisible, setIsVisible] = useState(true);
@@ -52,7 +52,7 @@ const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
               stiffness: 300,
               damping: 25,
             }}
-            className="pointer-events-auto flex h-full w-full flex-col overflow-hidden rounded-t-lg border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
+            className="pointer-events-auto flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
           >
             {/* Header */}
             <Header title={title} onClose={handleClose} />
@@ -66,6 +66,4 @@ const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
       </AnimatePresence>
     </div>
   );
-};
-
-export default WindowFrame;
+}

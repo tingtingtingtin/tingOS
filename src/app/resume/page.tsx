@@ -3,7 +3,7 @@
 import WindowFrame from "@/components/WindowFrame";
 import { Download, ExternalLink } from "lucide-react";
 
-const ResumeApp = () => {
+export default function ResumeApp() {
   return (
     <WindowFrame id="resume" title="resume.pdf - PDF Viewer">
       <div className="flex h-full flex-col">
@@ -11,7 +11,7 @@ const ResumeApp = () => {
         <div className="flex items-center justify-end gap-2 border-b border-gray-200 bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-800">
           <a
             href="/resume.pdf"
-            download="Tingxuan_Wu_Resume.pdf"
+            download="My_Resume.pdf"
             className="flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             <Download size={14} />
@@ -52,6 +52,4 @@ const ResumeApp = () => {
       </div>
     </WindowFrame>
   );
-};
-
-export default ResumeApp;
+}

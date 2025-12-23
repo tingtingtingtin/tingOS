@@ -21,7 +21,6 @@ const Desktop = () => {
             label={app.label}
             icon={app.icon}
             route={app.route}
-            url={app.url}
           />
         ))}
       </motion.div>

@@ -10,16 +10,9 @@ interface DesktopIconProps {
   label: string;
   icon: LucideIcon;
   route: string;
-  url?: string;
 }
 
-const DesktopIcon = ({
-  id,
-  label,
-  icon: Icon,
-  route,
-  url,
-}: DesktopIconProps) => {
+const DesktopIcon = ({ id, label, icon: Icon, route }: DesktopIconProps) => {
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
   const iconRef = useRef<HTMLDivElement>(null);
@@ -36,10 +29,6 @@ const DesktopIcon = ({
   }, []);
 
   const handleDoubleClick = () => {
-    if (url) {
-      window.open(url, "_blank")?.focus();
-      return;
-    }
     launchApp(id);
     setTimeout(() => {
       router.push(route);

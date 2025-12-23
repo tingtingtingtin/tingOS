@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import NotebookDecor from "./NotebookDecor";
+import BrushSizeSlider from "./BrushSizeSlider";
 
 const COLORS = [
   "#000000", // Black
@@ -49,7 +50,6 @@ const Palette = () => {
 
   // --- Initial Mode Setup ---
   useEffect(() => {
-    // Only run this ONCE on mount to set desktop default
     if (window.innerWidth >= 768) {
       setMode("brush");
     }
@@ -252,7 +252,6 @@ const Palette = () => {
     window.addEventListener("mouseup", handleWindowUp);
     window.addEventListener("touchend", handleWindowUp);
 
-    // Keyboard shortcuts
     const handleKeyDown = (ev: KeyboardEvent) => {
       const target = ev.target as HTMLElement | null;
       if (
@@ -285,24 +284,36 @@ const Palette = () => {
   return (
     <div className="flex h-full flex-col-reverse bg-gray-50 font-sans text-gray-800 md:flex-row dark:bg-gray-900 dark:text-gray-100">
       {/* --- Toolbar --- */}
-      <aside className="z-20 flex w-full shrink-0 flex-row items-center justify-between overflow-hidden border-t border-gray-200 bg-white px-4 py-3 pb-4 shadow-sm md:h-full md:w-24 md:flex-col md:justify-start md:border-t-0 md:border-r md:py-6 dark:border-gray-800 dark:bg-gray-800">
-        {/* MOBILE: Left Side - 3 Mode Toggles */}
-        <div className="flex gap-2 md:hidden">
+      <aside className="z-20 flex w-full shrink-0 flex-row items-center justify-between border-t border-gray-200 bg-white px-4 py-3 pb-4 shadow-sm md:h-full md:w-24 md:flex-col md:justify-start md:overflow-hidden md:border-t-0 md:border-r md:py-6 dark:border-gray-800 dark:bg-gray-800">
+        {/* MOBILE: Segmented Control (Hand | Brush | Eraser) */}
+        <div className="flex items-center rounded-2xl bg-gray-100 p-1 md:hidden dark:bg-gray-700/50">
           <button
             onClick={() => setMode("hand")}
-            className={`rounded-lg p-3 transition-colors ${mode === "hand" ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"}`}
+            className={`rounded-xl px-4 py-2 transition-all ${
+              mode === "hand"
+                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
+                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            }`}
           >
             <Hand size={20} />
           </button>
           <button
             onClick={() => setMode("brush")}
-            className={`rounded-lg p-3 transition-colors ${mode === "brush" ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"}`}
+            className={`rounded-xl px-4 py-2 transition-all ${
+              mode === "brush"
+                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
+                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            }`}
           >
             <PenLine size={20} />
           </button>
           <button
             onClick={() => setMode("eraser")}
-            className={`rounded-lg p-3 transition-colors ${mode === "eraser" ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"}`}
+            className={`rounded-xl px-4 py-2 transition-all ${
+              mode === "eraser"
+                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
+                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            }`}
           >
             <Eraser size={20} />
           </button>
@@ -327,7 +338,7 @@ const Palette = () => {
 
         {/* MOBILE: Right Side - Action Groups */}
         <div className="flex items-center gap-2 md:w-full md:flex-col md:gap-4">
-          {/* 1. Mobile Color Popover Trigger */}
+          {/* Mobile Color Popover Trigger */}
           <div className="relative md:hidden">
             <button
               onClick={() => {
@@ -348,7 +359,7 @@ const Palette = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="fixed bottom-32 left-1/2 z-50 flex w-[90vw] max-w-sm -translate-x-1/2 flex-row items-center justify-between rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-gray-700 dark:bg-gray-800"
+                  className="fixed bottom-32 left-1/2 z-60 flex w-[90vw] max-w-sm -translate-x-1/2 flex-row items-center justify-between rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-gray-700 dark:bg-gray-800"
                 >
                   {COLORS.map((c) => (
                     <button
@@ -367,10 +378,11 @@ const Palette = () => {
             </AnimatePresence>
           </div>
 
-          {/* 2. Size Slider Popover/Inline */}
+          {/* Size Slider (Mobile Popover / Desktop Inline) */}
           <div className="relative md:flex md:w-full md:flex-col md:items-center">
+            {/* Mobile Toggle Button */}
             <button
-              className="rounded-lg p-3 text-gray-500 hover:bg-gray-100 md:hidden dark:hover:bg-gray-700"
+              className="z-60 rounded-lg p-3 text-gray-500 hover:bg-gray-100 md:hidden dark:hover:bg-gray-700"
               onClick={() => {
                 setShowMobileSize(!showMobileSize);
                 setShowMobileColors(false);
@@ -379,45 +391,39 @@ const Palette = () => {
               <Settings2 size={20} />
             </button>
 
-            {/* Popup Slider for Mobile */}
+            {/* Mobile Popover Slider (Horizontal) */}
             <AnimatePresence>
               {showMobileSize && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 bottom-14 z-50 w-48 rounded-xl border border-gray-200 bg-white p-4 shadow-xl md:hidden dark:border-gray-700 dark:bg-gray-800"
+                  className="fixed bottom-32 left-1/2 z-60 flex w-[90vw] max-w-sm -translate-x-1/2 flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-xl md:hidden dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <label className="mb-2 block text-xs font-bold text-gray-400">
+                  <label className="mb-4 block text-xs font-bold text-gray-400">
                     Brush Size
                   </label>
-                  <input
-                    type="range"
+                  <BrushSizeSlider
+                    value={lineWidth}
+                    onChange={setLineWidth}
                     min={1}
                     max={50}
-                    value={lineWidth}
-                    onChange={(v) => setLineWidth(Number(v.target.value))}
-                    className="w-full"
+                    color={color}
                   />
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Desktop Slider */}
-            <div className="hidden w-full flex-col items-center px-3 md:flex">
-              <label className="mb-2 text-xs text-gray-400">Size</label>
-              <div className="flex h-32 items-center">
-                <input
-                  type="range"
-                  min={1}
-                  max={80}
-                  value={lineWidth}
-                  onChange={(v) =>
-                    setLineWidth(Number((v.target as HTMLInputElement).value))
-                  }
-                  className="mt-1 w-32 origin-center -rotate-90 transform cursor-pointer"
-                />
-              </div>
+            {/* Desktop Sidebar Slider (Vertical) */}
+            <div className="hidden h-40 w-full flex-col items-center justify-center pt-4 md:flex">
+              <BrushSizeSlider
+                value={lineWidth}
+                onChange={setLineWidth}
+                min={1}
+                max={60}
+                color={color}
+                vertical={true}
+              />
             </div>
           </div>
 
@@ -439,7 +445,7 @@ const Palette = () => {
 
           <button
             onClick={clearCanvas}
-            className="rounded-lg p-3 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-500 md:mt-auto md:mb-20"
+            className="rounded-lg p-3 text-gray-500 transition-colors active:bg-red-50 active:text-red-500 md:mt-auto md:mb-20 md:hover:bg-red-50 md:hover:text-red-500"
             title="Clear Canvas"
           >
             <RefreshCw size={20} />

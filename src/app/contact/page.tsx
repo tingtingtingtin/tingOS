@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Send, User, Bot } from "lucide-react";
+import { Send, User, Bot, Mail, Phone, LoaderCircle } from "lucide-react";
 import WindowFrame from "@/components/WindowFrame";
+import { LiaLinkedin } from "react-icons/lia";
 
 interface Message {
   id: string;
@@ -33,11 +34,12 @@ const TypingIndicator = () => (
   </div>
 );
 
-export default function MessengerApp() {
+const MessengerApp = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [step, setStep] = useState<Step>("init");
+  const [isSending, setIsSending] = useState(false);
 
   const [formData, setFormData] = useState({
     category: "",
@@ -80,7 +82,7 @@ export default function MessengerApp() {
     }
   }, [step]);
 
-  const handleSend = (text: string) => {
+  const handleSend = async (text: string) => {
     if (!text.trim()) return;
     const userMsg: Message = { id: crypto.randomUUID(), sender: "user", text };
     setMessages((prev) => [...prev, userMsg]);
@@ -99,21 +101,47 @@ export default function MessengerApp() {
         "contact",
       );
     } else if (step === "contact") {
+      const finalFormData = { ...formData, contact: text };
       setFormData((prev) => ({ ...prev, contact: text }));
       setIsTyping(true);
-      setTimeout(() => {
+      setIsSending(true);
+
+      try {
+        const response = await fetch("/api/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(finalFormData),
+        });
+
         setIsTyping(false);
+
+        if (response.ok) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: crypto.randomUUID(),
+              sender: "bot",
+              text: "System: Message delivered. I'll get back to you soon!",
+            },
+          ]);
+          setStep("complete");
+        } else {
+          throw new Error("SMTP_FAIL");
+        }
+      } catch (err) {
+        setIsTyping(false);
+        console.log(err);
         setMessages((prev) => [
           ...prev,
           {
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             sender: "bot",
-            text: "Message sent successfully! I hope to be in touch soon!",
+            text: "⚠️ System Error: Failed to send message. Please try again or use the direct contact links above.",
           },
         ]);
-        setStep("complete");
-        console.log("FORM SUBMITTED:", { ...formData, contact: text }); // Replace with API call
-      }, 2000);
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -126,6 +154,39 @@ export default function MessengerApp() {
       <div className="flex h-full flex-col bg-white dark:bg-gray-900">
         {/* --- Chat Area --- */}
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
+          {/* Static Contact Info Blurb */}
+          <div className="mb-6 rounded-2xl border border-gray-200 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-800/50">
+            <h3 className="mb-3 text-xs font-bold tracking-widest text-gray-400 uppercase">
+              Direct Contact
+            </h3>
+            <div className="flex gap-4">
+              <a
+                href="mailto:twu062604@gmail.com?subject=Inquiry&body=Message%20details"
+                className="flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                  <Mail size={14} />
+                </div>
+                Email
+              </a>
+              <a
+                href="https://linkedin.com/in/tingxuanwu"
+                target="_blank"
+                className="flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                  <LiaLinkedin size={20} />
+                </div>
+                LinkedIn
+              </a>
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                  <Phone size={14} />
+                </div>
+                +1 (818) 660-6388
+              </div>
+            </div>
+          </div>
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
               <motion.div
@@ -227,14 +288,30 @@ export default function MessengerApp() {
             />
             <button
               onClick={() => handleSend(inputValue)}
-              disabled={!inputValue.trim() || step === "complete" || isTyping}
+              disabled={
+                !inputValue.trim() ||
+                step === "complete" ||
+                isTyping ||
+                isSending
+              }
               className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
             >
-              <Send size={20} className={inputValue.trim() ? "ml-0.5" : ""} />
+              {isSending ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <LoaderCircle size={20} />
+                </motion.div>
+              ) : (
+                <Send size={20} className={inputValue.trim() ? "ml-0.5" : ""} />
+              )}
             </button>
           </div>
         </div>
       </div>
     </WindowFrame>
   );
-}
+};
+
+export default MessengerApp;

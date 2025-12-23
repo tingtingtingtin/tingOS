@@ -3,7 +3,7 @@
 import WindowFrame from "@/components/WindowFrame";
 import { Download, ExternalLink } from "lucide-react";
 
-export default function ResumeApp() {
+const ResumeApp = () => {
   return (
     <WindowFrame id="resume" title="resume.pdf - PDF Viewer">
       <div className="flex h-full flex-col">
@@ -52,4 +52,6 @@ export default function ResumeApp() {
       </div>
     </WindowFrame>
   );
-}
+};
+
+export default ResumeApp;

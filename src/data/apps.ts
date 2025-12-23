@@ -6,6 +6,7 @@ import {
   LucideIcon,
   Twitter,
   MessageCircle,
+  Trash,
 } from "lucide-react";
 
 export interface AppConfig {
@@ -14,6 +15,7 @@ export interface AppConfig {
   icon: LucideIcon;
   route: string;
   isPinned: boolean;
+  url?: string;
 }
 
 export const apps: AppConfig[] = [
@@ -39,13 +41,6 @@ export const apps: AppConfig[] = [
     isPinned: true,
   },
   {
-    id: "resume",
-    label: "resume.txt",
-    icon: FileText,
-    route: "/resume",
-    isPinned: false,
-  },
-  {
     id: "contact",
     label: "Contact",
     icon: MessageCircle,
@@ -53,10 +48,25 @@ export const apps: AppConfig[] = [
     isPinned: true,
   },
   {
+    id: "resume",
+    label: "resume.txt",
+    icon: FileText,
+    route: "/resume",
+    isPinned: false,
+  },
+  {
+    id: "old",
+    label: "Old Site",
+    icon: Trash,
+    route: "/",
+    url: "https://tingx.vercel.app/",
+    isPinned: false,
+  },
+  {
     id: "terminal",
     label: "Terminal",
     icon: Terminal,
     route: "/terminal",
-    isPinned: true,
+    isPinned: false,
   },
 ];

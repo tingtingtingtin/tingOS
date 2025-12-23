@@ -6,6 +6,7 @@ import MotionProvider from "@/components/providers/MotionProvider";
 import { Analytics } from "@vercel/analytics/next";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import Wallpaper from "@/components/Wallpaper";
+import TitleBlinker from "@/components/TitleBlinker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +19,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "tingOS",
+  title: {
+    default: "tingOS",
+    template: "tingOS:%s",
+  },
+  icons: {
+    icon: [
+      {
+        url: "/favicon-light.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/favicon-dark.png",
+        media: "(prefers-color-scheme: light)",
+      },
+    ],
+  },
   description: "Ting Wu's Portfolio Site",
 };
 
@@ -34,6 +50,7 @@ export default function RootLayout({
       >
         <MotionProvider>
           <ThemeProvider>
+            <TitleBlinker />
             <Wallpaper />
             {children}
             <Taskbar />

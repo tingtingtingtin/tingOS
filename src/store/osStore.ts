@@ -7,6 +7,8 @@ interface OSState {
   isAppRunning: (id: string) => boolean;
   reducedMotion: boolean;
   toggleMotion: () => void;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
 }
 
 export const useOSStore = create<OSState>((set, get) => ({
@@ -29,4 +31,7 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   reducedMotion: false,
   toggleMotion: () => set((state) => ({ reducedMotion: !state.reducedMotion })),
+
+  darkMode: true, // default to dark
+  toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
 }));

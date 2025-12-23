@@ -32,7 +32,7 @@ export default function WindowFrame({ id, title, children }: WindowFrameProps) {
   };
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center">
+    <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center pb-14">
       {/* pointer-events-none on container lets clicks pass through to desktop for future transparency
 
           pointer-events-auto on the window itself ensures interaction.

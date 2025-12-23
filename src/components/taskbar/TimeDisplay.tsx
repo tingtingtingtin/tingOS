@@ -18,8 +18,8 @@ const TimeDisplay = () => {
   return (
     <div className="group relative ml-4 flex flex-col items-end">
       <span>{time}</span>
-      <span className="text-xs text-gray-300">{date}</span>
-      <span className="pointer-events-none absolute -top-10 right-0 z-50 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="text-xs text-gray-500 dark:text-gray-300">{date}</span>
+      <span className="pointer-events-none absolute -top-10 right-0 z-50 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
         My Local Time (PST)
       </span>
     </div>

@@ -22,7 +22,7 @@ const DesktopIcon = ({
 }: DesktopIconProps) => {
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
-  const iconRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLButtonElement>(null);
   const { launchApp, darkMode } = useOSStore();
 
   useEffect(() => {
@@ -54,11 +54,22 @@ const DesktopIcon = ({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      executeOpen();
+    }
+    // TODO:(?) Arrow key navigation
+  };
+
   return (
-    <div
+    <button
       ref={iconRef}
       onClick={handleInteraction}
       onDoubleClick={executeOpen}
+      onKeyDown={handleKeyDown}
+      onFocus={() => setIsSelected(true)}
+      onBlur={() => setIsSelected(false)}
+      aria-label={`Open ${label}`}
       className={`group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-md p-2 transition-all duration-100 ${
         isSelected
           ? "border border-blue-500/50 bg-blue-500/30 backdrop-blur-sm"
@@ -89,7 +100,7 @@ const DesktopIcon = ({
       >
         {label}
       </span>
-    </div>
+    </button>
   );
 };
 

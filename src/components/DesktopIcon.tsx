@@ -58,9 +58,6 @@ const DesktopIcon = ({
     if (e.key === "Enter") {
       executeOpen();
     }
-    else if (e.key === "Tab") {
-      setIsSelected(false);
-    }
     // TODO:(?) Arrow key navigation
   };
 
@@ -71,6 +68,7 @@ const DesktopIcon = ({
       onDoubleClick={executeOpen}
       onKeyDown={handleKeyDown}
       onFocus={() => setIsSelected(true)}
+      onBlur={() => setIsSelected(false)}
       aria-label={`Open ${label}`}
       className={`group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-md p-2 transition-all duration-100 ${
         isSelected

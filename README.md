@@ -4,28 +4,58 @@ A desktop OS-inspired personal portfolio website built with Next.js.
 
 ## Features
 
-### Desktop Interface
+### Desktop OS Experience
 
-- **Icon Grid**: Launch applications by clicking desktop icons
-- **Taskbar**: Bottom taskbar with pinned apps, running indicators, and system controls
+- **Boot Sequence & Lock Screen**: Full startup animations with loading messages, time display, and drag-to-unlock lock screen
+- **User Authentication**: Guest and admin (password-protected) user accounts with session management
+- **Icon Grid**: Desktop icons to launch applications
+- **Taskbar**: Bottom taskbar with pinned apps, running indicators, system controls, and settings panel
 - **Window Management**: Open multiple windows that can be closed and reopened
-- **Motion Controls**: Toggle reduced motion via settings panel
+- **Dark/Light Theme Toggle**: Theme preferences stored and synced across the system
+- **Motion Controls**: Toggle reduced motion via settings panel for accessibility
 
-### Pages
+### Applications
 
 - **About**: Interactive drawing canvas with personal bio and notebook-style layout
   - Smooth quadratic bezier brush strokes
-  - Eraser tool with adjustable brush size
-  - Touch and mouse support
-  - Custom cursor preview
+  - Eraser tool with adjustable brush size (1-60px)
+  - Touch and mouse support with custom cursor preview
   - Non-destructive canvas resize
-- **Projects**: GitHub Webhook-integrated project showcase with latest commit activity and user data
-- **Resume**: Text-based resume viewer
+  - Keyboard shortcuts (E to toggle eraser, C to clear canvas)
+- **Projects**: GitHub Webhook-integrated project showcase
+  - Live commit activity with GitHub user data
+  - Displays latest commits and repository information
+  - Automatic revalidation via GitHub webhooks
+- **Experience**: Twitter-style feed with experience and education
+  - Tab-based view switching between roles and education
+  - Tweet-style cards with engagement metrics
+- **Contact**: Interactive messenger-style contact form
+  - Multi-step conversational interface with bot replies
+  - Form validation and email submission via `/api/send`
+  - Typing indicators and smooth scrolling
+- **Terminal**: Full in-browser terminal emulator
+  - xterm.js-based terminal with vim-like styling
+  - Virtual file system that mirrors GitHub repository structure
+  - Lazy-loaded file content from GitHub API
+  - Session-cached filesystem for performance
+  - Command processing with navigation and file operations
+- **Resume**: Resume PDF viewer
 
 ### State Management
 
-- Zustand store for managing running applications and motion preferences
-- GitHub Webhook API integration for fetching live commit data, with revalidation logic via POST request
+- **Zustand** store for managing running applications, motion preferences, and theme settings
+- Session storage for authentication state and filesystem caching
+- GitHub Webhook API integration with HMAC signature verification for live data updates
+
+## Tech Stack
+
+- **Framework**: Next.js with TypeScript
+- **UI/Animation**: React, Framer Motion
+- **Terminal**: xterm.js with FitAddon for responsive sizing
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React, React Icons
+- **Storage**: Zustand (state), sessionStorage (caching)
+- **API**: GitHub REST API for repos and commits
 
 ## Getting Started
 
@@ -44,6 +74,13 @@ Open [http://localhost:3000](http://localhost:3000) to view. You may need ngrok 
 - `npm run lint` - Run ESLint
 - `npm run format` - Format code with Prettier
 
+# Design Notes
+
+- Mobile-first responsive design with distinct desktop/mobile layouts
+- Accessibility optimizations including reduced motion support
+- Canvas-based drawing with optimized performance for mobile
+- Dark mode support throughout with preference detection
+
 ---
 
-_Work in progress_
+_Work in progress: Terminal commands and features continue to expand_

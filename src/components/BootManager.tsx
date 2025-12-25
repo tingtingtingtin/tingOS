@@ -108,12 +108,15 @@ export default function BootManager() {
     if (selectedUser === "guest") {
       executeLogin();
     } else {
-      if (password === "admin" || password === "password") {
+      const storedHash = process.env.NEXT_PUBLIC_PASSWORD_HASH;
+      const inputHash = btoa(password);
+
+      if (inputHash === storedHash) {
         executeLogin();
       } else {
         setLoginError(true);
         setPassword("");
-        setTimeout(() => setLoginError(false), 3000);
+        setTimeout(() => setLoginError(false), 2000);
       }
     }
   };

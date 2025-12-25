@@ -22,7 +22,7 @@ const DesktopIcon = ({
 }: DesktopIconProps) => {
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
-  const iconRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLButtonElement>(null);
   const { launchApp, darkMode } = useOSStore();
 
   useEffect(() => {
@@ -58,11 +58,14 @@ const DesktopIcon = ({
     if (e.key === "Enter") {
       executeOpen();
     }
+    else if (e.key === "Tab") {
+      setIsSelected(false);
+    }
     // TODO:(?) Arrow key navigation
   };
 
   return (
-    <div
+    <button
       ref={iconRef}
       onClick={handleInteraction}
       onDoubleClick={executeOpen}
@@ -99,7 +102,7 @@ const DesktopIcon = ({
       >
         {label}
       </span>
-    </div>
+    </button>
   );
 };
 

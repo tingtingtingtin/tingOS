@@ -23,6 +23,7 @@ const TerminalApp = () => {
   const fsRef = useRef<FileNode | null>(null);
   const pathRef = useRef<string[]>([]);
   const inputBuffer = useRef("");
+  const cursorPos = useRef(0);
 
   useEffect(() => {
     fsRef.current = fileSystem;
@@ -32,8 +33,11 @@ const TerminalApp = () => {
     pathRef.current = currentPath;
 
     if (xtermRef.current) {
+      xtermRef.current.write("\r\x1b[K"); 
       const prompt = formatPrompt(currentPath);
       xtermRef.current.write(prompt);
+      inputBuffer.current = "";
+      cursorPos.current = 0;
     }
   }, [currentPath]);
 
@@ -64,6 +68,16 @@ const TerminalApp = () => {
       term.writeln("\x1b[1;32mWelcome to TingOS Terminal v1.0.0\x1b[0m");
       term.writeln("Type \x1b[1;34mhelp\x1b[0m to see available commands.");
 
+      const refreshLine = () => {
+        const prompt = formatPrompt(pathRef.current);
+        term.write("\r\x1b[K" + prompt + inputBuffer.current);
+
+        const backAmount = inputBuffer.current.length - cursorPos.current;
+        if (backAmount > 0) {
+          term.write("\b".repeat(backAmount));
+        }
+      };
+
       term.onData(async (key) => {
         const charCode = key.charCodeAt(0);
 
@@ -72,9 +86,9 @@ const TerminalApp = () => {
             historyIndex.current++;
             const prevCommand = history.current[history.current.length - 1 - historyIndex.current];
 
-            term.write("\b \b".repeat(inputBuffer.current.length));
             inputBuffer.current = prevCommand;
-            term.write(prevCommand);
+            cursorPos.current = prevCommand.length;
+            refreshLine();
           }
           return;
         }
@@ -86,53 +100,69 @@ const TerminalApp = () => {
               ? ""
               : history.current[history.current.length - 1 - historyIndex.current];
 
-            term.write("\b \b".repeat(inputBuffer.current.length));
             inputBuffer.current = nextCommand;
-            term.write(nextCommand);
+            cursorPos.current = nextCommand.length;
+            refreshLine();
           }
           return;
         }
 
-        if (charCode === 13) {
-          term.write("\r\n");
-          const currInput = inputBuffer.current.trim();
-          if (currInput.length > 0) {
-            history.current.push(currInput);
-            historyIndex.current = -1;
+        if (key === "\x1b[D") { // Left arrow
+          if (cursorPos.current > 0) {
+            cursorPos.current--;
+            term.write(key);
           }
-          const command = currInput;
+          return;
+        }
 
-          if (fsRef.current) {
-            const output = await processCommand(
-              command,
-              fsRef.current,
-              pathRef.current,
-              (newPath) => setCurrentPath(newPath),
-              router,
-            );
+        if (key === "\x1b[C") { // Right arrow
+          if (cursorPos.current < inputBuffer.current.length) {
+            cursorPos.current++;
+            term.write(key);
+          }
+          return;
+        }
 
+        if (charCode === 13) { // Enter key
+          term.write("\r\n");
+          const cmd = inputBuffer.current;
+          if (cmd.trim() && fsRef.current) {
+            history.current.push(cmd.trim());
+            historyIndex.current = -1;
+            const output = await processCommand(cmd.trim(), fsRef.current!, pathRef.current, (p) => setCurrentPath(p), router);
             if (output) term.writeln(output);
-          } else {
-            term.writeln("File system initializing... (Try again in a moment)");
           }
 
           inputBuffer.current = "";
-
-          if (!command.startsWith("cd")) {
+          cursorPos.current = 0;
+          if (!cmd.startsWith("cd")) {
             term.write(formatPrompt(pathRef.current));
           }
         }
-        // Backspace
-        else if (charCode === 127) {
-          if (inputBuffer.current.length > 0) {
-            inputBuffer.current = inputBuffer.current.slice(0, -1);
-            term.write("\b \b");
+        else if (charCode === 127) { // Backspace
+          if (cursorPos.current > 0) {
+            const left = inputBuffer.current.slice(0, cursorPos.current - 1);
+            const right = inputBuffer.current.slice(cursorPos.current);
+            inputBuffer.current = left + right;
+            cursorPos.current--;
+            refreshLine();
           }
         }
-        // Normal Char
-        else {
-          inputBuffer.current += key;
-          term.write(key);
+        else if (key === "\x1b[3~") { // Delete key
+          if (cursorPos.current < inputBuffer.current.length) {
+            const left = inputBuffer.current.slice(0, cursorPos.current);
+            const right = inputBuffer.current.slice(cursorPos.current + 1);
+            inputBuffer.current = left + right;
+            refreshLine();
+          }
+          return;
+        }
+        else if (charCode >= 32 && charCode <= 126) { // Normal Char (printable)
+          const left = inputBuffer.current.slice(0, cursorPos.current);
+          const right = inputBuffer.current.slice(cursorPos.current);
+          inputBuffer.current = left + key + right;
+          cursorPos.current++;
+          refreshLine();
         }
       });
 

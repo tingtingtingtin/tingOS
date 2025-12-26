@@ -17,6 +17,9 @@ const TerminalApp = () => {
   const [fileSystem, setFileSystem] = useState<FileNode | null>(null);
   const [currentPath, setCurrentPath] = useState<string[]>([]);
 
+  const history = useRef<string[]>([]);
+  const historyIndex = useRef<number>(-1);
+
   const fsRef = useRef<FileNode | null>(null);
   const pathRef = useRef<string[]>([]);
   const inputBuffer = useRef("");
@@ -64,9 +67,40 @@ const TerminalApp = () => {
       term.onData(async (key) => {
         const charCode = key.charCodeAt(0);
 
+        if (key === "\x1b[A") { // Up arrow
+          if (history.current.length > 0 && historyIndex.current < history.current.length - 1) {
+            historyIndex.current++;
+            const prevCommand = history.current[history.current.length - 1 - historyIndex.current];
+
+            term.write("\b \b".repeat(inputBuffer.current.length));
+            inputBuffer.current = prevCommand;
+            term.write(prevCommand);
+          }
+          return;
+        }
+
+        if (key === "\x1b[B") { // Down arrow
+          if (historyIndex.current > -1) {
+            historyIndex.current--;
+            const nextCommand = historyIndex.current === -1
+              ? ""
+              : history.current[history.current.length - 1 - historyIndex.current];
+
+            term.write("\b \b".repeat(inputBuffer.current.length));
+            inputBuffer.current = nextCommand;
+            term.write(nextCommand);
+          }
+          return;
+        }
+
         if (charCode === 13) {
           term.write("\r\n");
-          const command = inputBuffer.current.trim();
+          const currInput = inputBuffer.current.trim();
+          if (currInput.length > 0) {
+            history.current.push(currInput);
+            historyIndex.current = -1;
+          }
+          const command = currInput;
 
           if (fsRef.current) {
             const output = await processCommand(

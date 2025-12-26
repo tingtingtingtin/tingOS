@@ -184,5 +184,5 @@ export const commandHandlers: Record<string, CommandHandler> = {
   theme: handleTheme,
   open: handleOpen,
   help: handleHelp,
-  "": () => "",
+  "": () => "", // handles blank enter
 };

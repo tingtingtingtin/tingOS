@@ -1,13 +1,14 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Minus, X } from "lucide-react";
 
 interface HeaderProps {
   title: string;
   onClose: () => void;
+  onMinimize?: () => void;
 }
 
-const Header = ({ title, onClose }: HeaderProps) => {
+const Header = ({ title, onClose, onMinimize }: HeaderProps) => {
   return (
     <header
       // TODO: handle class for dragability
@@ -17,13 +18,24 @@ const Header = ({ title, onClose }: HeaderProps) => {
         {/* TODO: Add a small icon here based on the app later */}
         {title}
       </div>
-      <button
-        onClick={onClose}
-        className="flex items-center justify-center rounded p-1 text-gray-500 transition-colors hover:bg-red-500 hover:text-white"
-        title="Close App"
-      >
-        <X size={18} />
-      </button>
+      <div className="flex items-center gap-1">
+        {onMinimize && (
+          <button
+            onClick={onMinimize}
+            className="flex items-center justify-center rounded p-1 text-gray-500 transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
+            title="Minimize"
+          >
+            <Minus size={16} />
+          </button>
+        )}
+        <button
+          onClick={onClose}
+          className="flex items-center justify-center rounded p-1 text-gray-500 transition-colors hover:bg-red-500 hover:text-white"
+          title="Close App"
+        >
+          <X size={18} />
+        </button>
+      </div>
     </header>
   );
 };

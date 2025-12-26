@@ -4,6 +4,7 @@ import "./globals.css";
 import Taskbar from "@/components/taskbar/Taskbar";
 import MotionProvider from "@/components/providers/MotionProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import Wallpaper from "@/components/Wallpaper";
 import TitleBlinker from "@/components/TitleBlinker";
@@ -57,6 +58,7 @@ export default function RootLayout({
             {children}
             <Taskbar />
             <Analytics />
+            <SpeedInsights />
           </ThemeProvider>
         </MotionProvider>
       </body>

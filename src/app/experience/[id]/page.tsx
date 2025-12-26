@@ -28,7 +28,7 @@ const TweetDetail = async ({ params }: PageProps) => {
   }
 
   return (
-    <WindowFrame id="experiences" title="Xperiences">
+    <WindowFrame id="experience" title="Xperiences">
       <div className="min-h-full bg-white pb-20 dark:bg-black">
         {/* Sticky Header with Back Button */}
         <div className="sticky top-0 z-10 flex items-center gap-6 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-800 dark:bg-black/80">

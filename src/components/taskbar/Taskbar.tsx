@@ -28,6 +28,11 @@ const Taskbar = () => {
   const darkMode = useOSStore((s) => s.darkMode);
   const toggleDarkMode = useOSStore((s) => s.toggleDarkMode);
 
+  const isRouteActive = (route: string) => {
+    if (route === "/") return pathname === "/";
+    return pathname === route || pathname.startsWith(`${route}/`);
+  };
+
   // UI States
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mobileTabsOpen, setMobileTabsOpen] = useState(false);
@@ -66,7 +71,7 @@ const Taskbar = () => {
 
   const handleAppClick = (appId: string, route: string) => {
     setMobileTabsOpen(false);
-    const isActive = pathname === route;
+    const isActive = isRouteActive(route);
     if (isActive) {
       router.push("/");
     } else {
@@ -100,7 +105,7 @@ const Taskbar = () => {
         {/* App Icons */}
         <div className="flex items-center gap-2">
           {desktopTaskbarApps.map((app) => {
-            const isActive = pathname === app.route;
+            const isActive = isRouteActive(app.route);
             const isRunning = runningApps.includes(app.id);
 
             return (
@@ -271,7 +276,7 @@ const Taskbar = () => {
                     key={app.id}
                     onClick={() => handleAppClick(app.id, app.route)}
                     className={`flex flex-col items-center justify-center gap-3 rounded-2xl border p-6 transition-all ${
-                      pathname === app.route
+                      isRouteActive(app.route)
                         ? "border-blue-500/50 bg-blue-500/20"
                         : "border-white/20 bg-white/40 dark:border-white/10 dark:bg-gray-800/40"
                     } `}
@@ -279,7 +284,7 @@ const Taskbar = () => {
                     <app.icon
                       size={42}
                       className={
-                        pathname === app.route
+                        isRouteActive(app.route)
                           ? "text-blue-600 dark:text-blue-400"
                           : "text-gray-700 dark:text-gray-300"
                       }

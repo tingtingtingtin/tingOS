@@ -33,13 +33,13 @@ const Tweet = ({ data }: { data: TweetData }) => {
         <div className="min-w-0 flex-1">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 truncate text-sm w-full">
+            <div className="flex w-full items-center gap-1 truncate text-sm">
               <span className="truncate font-bold text-gray-900 dark:text-white">
                 {data.name}
               </span>
-              <span className="truncate text-gray-500 ml-2">{data.handle}</span>
-              <span className="px-1 text-gray-500 hidden md:block">·</span>
-              <span className="text-gray-500 hover:underline hidden md:block">
+              <span className="ml-2 truncate text-gray-500">{data.handle}</span>
+              <span className="hidden px-1 text-gray-500 md:block">·</span>
+              <span className="hidden text-gray-500 hover:underline md:block">
                 {data.date}
               </span>
             </div>
@@ -48,7 +48,7 @@ const Tweet = ({ data }: { data: TweetData }) => {
             </button>
           </div>
 
-          <span className="text-gray-500 hover:underline text-sm md:hidden">
+          <span className="text-sm text-gray-500 hover:underline md:hidden">
             {data.date}
           </span>
 

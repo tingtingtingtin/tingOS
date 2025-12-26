@@ -26,7 +26,7 @@ const TerminalApp = () => {
   const cursorPos = useRef(0);
 
   useEffect(() => {
-    fsRef.current = fileSystem;
+    // fsRef.current = fileSystem;
   }, [fileSystem]);
 
   useEffect(() => {
@@ -44,6 +44,7 @@ const TerminalApp = () => {
   useEffect(() => {
     initializeFileSystem().then((root) => {
       setFileSystem(root);
+      fsRef.current = root;
     });
 
     // Initialize Xterm
@@ -70,12 +71,13 @@ const TerminalApp = () => {
 
       const refreshLine = () => {
         const prompt = formatPrompt(pathRef.current);
-        term.write("\r\x1b[K" + prompt + inputBuffer.current);
-
         const backAmount = inputBuffer.current.length - cursorPos.current;
+
+        let output = "\r\x1b[K" + prompt + inputBuffer.current;
         if (backAmount > 0) {
-          term.write("\b".repeat(backAmount));
+          output += "\b".repeat(backAmount);
         }
+        term.write(output);
       };
 
       term.onData(async (key) => {
@@ -166,7 +168,14 @@ const TerminalApp = () => {
         }
       });
 
-      window.addEventListener("resize", () => fitAddon.fit());
+      const handleResize = () => fitAddon.fit();
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        term.dispose();
+        xtermRef.current = null;
+      };
     }
   }, [router]);
 

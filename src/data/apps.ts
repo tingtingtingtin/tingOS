@@ -73,8 +73,8 @@ export const apps: AppConfig[] = [
   {
     id: "games",
     label: "Games",
-    icon:Gamepad,
+    icon: Gamepad,
     route: "/games",
     isPinned: false,
-  }
+  },
 ];

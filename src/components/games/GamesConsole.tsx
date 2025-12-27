@@ -8,15 +8,37 @@ import { ControlButtons } from "./ControlButtons";
 
 export default function GamesConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [selectedGame, setSelectedGame] = useState<typeof games[0] | null>(null);
+  const [selectedGame, setSelectedGame] = useState<(typeof games)[0] | null>(
+    null,
+  );
+  const [isMobile, setIsMobile] = useState(false);
 
-  const [time, setTime] = useState(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
   useEffect(() => {
-    const tick = () => setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
+    const updateIsMobile = () => setIsMobile(window.innerWidth < 768);
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
+    return () => window.removeEventListener("resize", updateIsMobile);
+  }, []);
+
+  const [time, setTime] = useState(() =>
+    new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }),
+  );
+  useEffect(() => {
+    const tick = () =>
+      setTime(
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      );
     const interval = setInterval(tick, 60000);
     return () => clearInterval(interval);
   }, []);
-
 
   const tickAudio = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
@@ -32,20 +54,23 @@ export default function GamesConsole() {
       return;
     }
     const audio = new Audio("/select.mp3");
-    audio.volume = 0.2
+    audio.volume = 0.2;
     audio.play().catch(() => {});
   };
 
   useEffect(() => {
     playSound("select");
-  }, [])
+  }, []);
 
   // --- NAVIGATION ---
-  const handleNavigate = useCallback((dir: number) => {
-    if (selectedGame) return;
-    setActiveIndex((prev) => prev + dir);
-    playSound("tick");
-  }, [selectedGame]);
+  const handleNavigate = useCallback(
+    (dir: number) => {
+      if (selectedGame) return;
+      setActiveIndex((prev) => prev + dir);
+      playSound("tick");
+    },
+    [selectedGame],
+  );
 
   const handleSelect = useCallback(() => {
     if (selectedGame) return;
@@ -62,7 +87,8 @@ export default function GamesConsole() {
   // --- KEYBOARD ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (["ArrowLeft", "ArrowRight", "Enter", " "].includes(e.key)) e.preventDefault();
+      if (["ArrowLeft", "ArrowRight", "Enter", " "].includes(e.key))
+        e.preventDefault();
       if (e.key === "ArrowLeft") handleNavigate(-1);
       if (e.key === "ArrowRight") handleNavigate(1);
       if (e.key === "Enter" || e.key === " " || e.key === "a") handleSelect();
@@ -81,22 +107,22 @@ export default function GamesConsole() {
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
+      <GameCarousel
+        activeIndex={activeIndex}
+        games={games}
+        onNavigate={handleNavigate}
+        onSelect={handleSelect}
+        time={time}
+        isMobile={isMobile}
+      />
 
-        <GameCarousel 
-          activeIndex={activeIndex}
-          games={games}
-          onNavigate={handleNavigate}
-          onSelect={handleSelect}
-          time={time}
-        />
-
-      <ControlButtons 
+      <ControlButtons
         activeGameData={getGame(activeIndex)}
         onSelect={handleSelect}
+        isMobile={isMobile}
       />
 
       <GameModal selectedGame={selectedGame} onClose={handleClose} />
-
     </div>
   );
 }

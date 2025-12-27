@@ -186,7 +186,7 @@ const Palette = () => {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
       const pos = getPosFromMouse(e as any);
-      
+
       if (!ctx || !pos || !lastPoint.current) {
         drawingRequestRef.current = null;
         return;
@@ -196,7 +196,12 @@ const Palette = () => {
       const midY = (lastPoint.current.y + pos.y) / 2;
 
       setCtxForTool(ctx);
-      ctx.quadraticCurveTo(lastPoint.current.x, lastPoint.current.y, midX, midY);
+      ctx.quadraticCurveTo(
+        lastPoint.current.x,
+        lastPoint.current.y,
+        midX,
+        midY,
+      );
       ctx.stroke();
 
       lastPoint.current = pos;

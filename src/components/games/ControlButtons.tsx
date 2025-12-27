@@ -6,15 +6,18 @@ import type { Game } from "@/data/games";
 interface ControlButtonsProps {
   onSelect: () => void;
   activeGameData: Game;
+  isMobile: boolean;
 }
 
 export function ControlButtons({
   onSelect,
   activeGameData,
+  isMobile,
 }: ControlButtonsProps) {
   const hasGithub = Boolean(activeGameData.githubUrl);
   const hasExternal = Boolean(activeGameData.extUrl);
   const hasEmbed = Boolean(activeGameData.embedUrl);
+  const isUnsupported = isMobile && activeGameData.desktopOnly;
 
   return (
     <>
@@ -23,16 +26,16 @@ export function ControlButtons({
         {/* Button 1: GitHub */}
         {hasGithub && (
           <div
-            className="flex flex-col items-center gap-2 group cursor-pointer relative"
+            className="group relative flex cursor-pointer flex-col items-center gap-2"
             onClick={() =>
               activeGameData.githubUrl &&
               window.open(activeGameData.githubUrl, "_blank")
             }
           >
-            <div className="flex h-12 w-12 mb-8 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+            <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
               <Github size={24} />
             </div>
-            <span className="absolute bottom-1 whitespace-nowrap text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-1 text-xs font-bold tracking-tight whitespace-nowrap text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
               Source
             </span>
           </div>
@@ -40,29 +43,36 @@ export function ControlButtons({
 
         {/* Center: Play Indicator */}
         <div
-          className={`flex flex-col items-center gap-2 mb-2 group ${hasEmbed ? "cursor-pointer" : "cursor-not-allowed"}`}
-          onClick={() => hasEmbed && onSelect()}
+          className={`group mb-2 flex flex-col items-center gap-2 ${hasEmbed && !isUnsupported ? "cursor-pointer" : "cursor-not-allowed"}`}
+          onClick={() => hasEmbed && !isUnsupported && onSelect()}
         >
-          <div className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${hasEmbed ? "group-hover:scale-110 group-active:scale-95" : "opacity-50"} dark:bg-[#3d3d3d]`}>
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${hasEmbed && !isUnsupported ? "group-hover:scale-110 group-active:scale-95" : "opacity-50"} dark:bg-[#3d3d3d]`}
+          >
             <Play fill="currentColor" size={28} className="ml-1" />
           </div>
           <span className="text-xs font-bold tracking-tight text-[#00C3E3]">
-            {hasEmbed ? "Start" : "Unavailable"}
+            {hasEmbed
+              ? isUnsupported
+                ? "Unsupported"
+                : "Start"
+              : "Unavailable"}
           </span>
         </div>
 
         {/* Button 3: External Link */}
         {hasExternal && (
           <div
-            className="flex flex-col items-center gap-2 group cursor-pointer relative"
+            className="group relative flex cursor-pointer flex-col items-center gap-2"
             onClick={() =>
-              activeGameData.extUrl && window.open(activeGameData.extUrl, "_blank")
+              activeGameData.extUrl &&
+              window.open(activeGameData.extUrl, "_blank")
             }
           >
-            <div className="flex h-12 w-12 mb-8 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+            <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
               <Globe size={24} />
             </div>
-            <span className="absolute bottom-1 whitespace-nowrap text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-1 text-xs font-bold tracking-tight whitespace-nowrap text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
               External Link
             </span>
           </div>
@@ -70,14 +80,14 @@ export function ControlButtons({
       </div>
 
       {/* --- CONTROLS FOOTER --- */}
-      <div className="hidden md:flex w-full items-center justify-between border-t mb-2 z-20 mt-auto border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
+      <div className="z-20 mt-auto mb-2 hidden w-full items-center justify-between border-t border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 md:flex dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              <span className="flex h-6 w-6 items-center justify-center rounded dark:bg-gray-800 dark:text-white bg-white text-gray-900">
+              <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
                 &lt;
               </span>
-              <span className="flex h-6 w-6 items-center justify-center rounded dark:bg-gray-800 dark:text-white bg-white text-gray-900">
+              <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
                 &gt;
               </span>
             </div>

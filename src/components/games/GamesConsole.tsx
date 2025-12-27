@@ -85,7 +85,7 @@ export default function GamesConsole() {
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
       
       {/* System Info */}
-      <div className="flex w-full items-center justify-between px-8 py-6 opacity-80">
+      <div className="flex w-full items-center justify-between px-8 pt-6 pb-2 opacity-80">
         {/* User Icon (Top Left) */}
         <div className="flex items-center gap-4">
             <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-400/30 bg-gray-300 dark:bg-gray-700">

@@ -70,21 +70,21 @@ export function ControlButtons({
       </div>
 
       {/* --- CONTROLS FOOTER --- */}
-      <div className="flex w-full items-center justify-between border-t border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
+      <div className="hidden md:flex w-full items-center justify-between border-t border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              <span className="flex h-6 w-6 items-center justify-center rounded bg-gray-700">
+              <span className="flex h-6 w-6 items-center justify-center rounded dark:bg-gray-800 dark:text-white bg-white text-gray-900">
                 &lt;
               </span>
-              <span className="flex h-6 w-6 items-center justify-center rounded bg-gray-700">
+              <span className="flex h-6 w-6 items-center justify-center rounded dark:bg-gray-800 dark:text-white bg-white text-gray-900">
                 &gt;
               </span>
             </div>
             <span>Navigate</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-black">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-black dark:bg-gray-800 dark:text-white">
               A
             </span>
             <span>Start</span>

@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import type { Game } from "@/data/games";
 
 const CARD_SIZE = 268;
 const CARD_GAP = 24;
-const VISIBLE_RANGE = 3;
+const DESKTOP_VISIBLE_RANGE = 3;
 
 interface GameCarouselProps {
   activeIndex: number;
@@ -21,8 +22,22 @@ export function GameCarousel({
   onNavigate,
   onSelect,
 }: GameCarouselProps) {
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const mouseDownX = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+
+  useEffect(() => {
+    const updateIsMobile = () => setIsMobile(window.innerWidth < 768);
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
+    return () => window.removeEventListener("resize", updateIsMobile);
+  }, []);
+
+  const visibleRange = isMobile ? 0 : DESKTOP_VISIBLE_RANGE;
+
   const renderRange = [];
-  for (let i = -VISIBLE_RANGE; i <= VISIBLE_RANGE; i++) {
+  for (let i = -visibleRange; i <= visibleRange; i++) {
     renderRange.push(activeIndex + i);
   }
 
@@ -38,20 +53,53 @@ export function GameCarousel({
   return (
     <>
       {/* Title Area */}
-      <div className="flex flex-col mb-8 z-20 ml-[15%] text-left">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col mb-8 z-20 text-left md:ml-[15%] md:text-left items-center md:items-start">
+        <div className="flex items-center gap-4 justify-center md:justify-start">
           <div className="h-6 w-1 bg-[#00C3E3] rounded-full" />
           <h2 className="text-xl md:text-2xl font-medium text-[#00C3E3]">
             {activeGameData.title}
           </h2>
         </div>
-        <p className="ml-3 mt-1 text-xs font-bold text-gray-400 uppercase tracking-widest">
+        <p className="ml-3 mt-1 text-xs font-bold text-gray-400 uppercase tracking-widest text-center md:text-left">
           {activeDescription}
         </p>
       </div>
 
       {/* Carousel Track */}
-      <div className="relative flex h-80 items-center justify-center perspective-dramatic">
+      <div
+        className="relative flex h-80 items-center justify-center perspective-dramatic cursor-grab active:cursor-grabbing select-none"
+        onTouchStart={(e) => {
+          touchStartX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (touchStartX.current === null) return;
+          const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(deltaX) > 50) {
+            onNavigate(deltaX > 0 ? -1 : 1);
+          }
+          touchStartX.current = null;
+        }}
+        onMouseDown={(e) => {
+          mouseDownX.current = e.clientX;
+          isDraggingRef.current = true;
+        }}
+        onMouseMove={(e) => {
+          if (!isDraggingRef.current || mouseDownX.current === null) return;
+          const deltaX = e.clientX - mouseDownX.current;
+          if (Math.abs(deltaX) > 20) {
+            isDraggingRef.current = false;
+            onNavigate(deltaX > 0 ? -1 : 1);
+          }
+        }}
+        onMouseUp={() => {
+          isDraggingRef.current = false;
+          mouseDownX.current = null;
+        }}
+        onMouseLeave={() => {
+          isDraggingRef.current = false;
+          mouseDownX.current = null;
+        }}
+      >
         <div className="relative h-full w-full max-w-6xl">
           {renderRange.map((index) => {
             const game = getGame(index);
@@ -68,7 +116,7 @@ export function GameCarousel({
                 animate={{
                   x: offset * (CARD_SIZE + CARD_GAP),
                   scale: isCenter ? 1.0 : 0.85,
-                  opacity: Math.abs(offset) > VISIBLE_RANGE - 0.5 ? 0 : 1,
+                  opacity: Math.abs(offset) > visibleRange ? 0 : 1,
                   zIndex: isCenter ? 20 : 10 - Math.abs(offset),
                   rotateY: offset * 10,
                 }}
@@ -114,6 +162,7 @@ export function GameCarousel({
                         alt={game.title}
                         width={1000}
                         height={1000}
+                        draggable={false}
                         className="h-full w-full object-cover"
                       />
                     ) : (
@@ -127,6 +176,25 @@ export function GameCarousel({
             );
           })}
         </div>
+
+        {isMobile && (
+          <div className="absolute inset-0 flex items-center justify-between px-4 md:hidden">
+            <button
+              aria-label="Previous game"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-700 shadow dark:bg-gray-800/80 dark:text-white"
+              onClick={() => onNavigate(-1)}
+            >
+              {"<"}
+            </button>
+            <button
+              aria-label="Next game"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-700 shadow dark:bg-gray-800/80 dark:text-white"
+              onClick={() => onNavigate(1)}
+            >
+              {">"}
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

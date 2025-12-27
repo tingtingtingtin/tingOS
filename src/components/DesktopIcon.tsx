@@ -74,7 +74,7 @@ const DesktopIcon = ({
       onClick={handleInteraction}
       onDoubleClick={executeOpen}
       onKeyDown={handleKeyDown}
-      onFocus={() => handleInteraction}
+      onFocus={handleInteraction}
       onBlur={() => setIsSelected(false)}
       aria-label={`Open ${label}`}
       className={`group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-md p-2 transition-all duration-100 ${

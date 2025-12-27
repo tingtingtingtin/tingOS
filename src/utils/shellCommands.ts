@@ -347,8 +347,22 @@ const handleMeowfetch: CommandHandler = () => {
   return normalize(output);
 };
 
-const handleHelp: CommandHandler = () =>
-  normalize(`
+const hints = [
+  "Try 'js 2 + 2'!",
+  "Use [Tab] to autocomplete filenames.",
+  "Try 'meowfetch' for system info!",
+  "Type '!!' to run the last command again.",
+  "You can use 'mkdir' and 'touch' to create things.",
+  "Try 'cowsay hello'!",
+  "Lost? 'tree' shows the whole file structure.",
+  "Forgot your watch? Try 'date'.",
+  "Use [Up Arrow] and [Down Arrow] to navigate command history.",
+  "Have you checked out my other projects?",
+];
+
+const handleHelp: CommandHandler = () => {
+  const randomHint = hints[Math.floor(Math.random() * hints.length)];
+  return normalize(`
 ${C.Bright}TingOS Terminal, version 1.1.0-release${C.Reset}
 Type 'help' to see this list.
 
@@ -356,22 +370,20 @@ ${C.Cyan}Navigation & Files${C.Reset}
   ${C.Bright}ls${C.Reset}         List directory contents
   ${C.Bright}cd${C.Reset}         Change directory
   ${C.Bright}pwd${C.Reset}        Print working directory
-  ${C.Bright}tree${C.Reset}       Visual directory structure
   ${C.Bright}cat${C.Reset}        Print file content
   ${C.Bright}grep${C.Reset}       Search for pattern in file
 
 ${C.Cyan}System & Portfolio${C.Reset}
   ${C.Bright}whoami${C.Reset}     Display developer info
-  ${C.Bright}meowfetch${C.Reset}  Display system info
   ${C.Bright}open${C.Reset}       Open apps (projects, resume, etc.)
   ${C.Bright}theme${C.Reset}      Change theme (dark, light)
   ${C.Bright}history${C.Reset}    Show command history (flag -c to clear)
-  ${C.Bright}date${C.Reset}       Display current time
   ${C.Bright}clear${C.Reset}      Clear the screen
   ${C.Bright}exit${C.Reset}       Close terminal session
 
-${C.Yellow}Hint: Try js 2 + 2 for fun! ${C.Reset}
+${C.Yellow}Hint: ${randomHint}${C.Reset}
 `);
+};
 
 export const commandHandlers: Record<string, CommandHandler> = {
   ls: handleLs,
@@ -386,8 +398,8 @@ export const commandHandlers: Record<string, CommandHandler> = {
   open: handleOpen,
   help: handleHelp,
   history: handleHistory,
-  meowfetch: handleMeowfetch,
   // Easter egg commands (Hi there!)
+  meowfetch: handleMeowfetch,
   neofetch: handleMeowfetch,
   js: handleJs,
   cowsay: handleCowsay,

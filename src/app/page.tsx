@@ -11,7 +11,7 @@ const Desktop = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.1 }}
+        transition={{ duration: 0.2 }}
         className="relative z-10 grid w-full grid-cols-3 justify-items-center gap-x-2 gap-y-6 md:w-fit md:grid-flow-col md:auto-rows-[110px] md:grid-cols-none md:content-start md:items-start md:justify-items-start md:gap-4"
       >
         {apps.map((app) => (

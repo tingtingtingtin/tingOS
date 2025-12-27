@@ -2,9 +2,10 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOSStore } from "@/store/osStore";
 import Header from "./Header";
+import WindowLoading from "./WindowLoading";
 
 interface WindowFrameProps {
   id: string;
@@ -16,17 +17,25 @@ const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
   const router = useRouter();
   const { closeApp, reducedMotion } = useOSStore();
   const [isVisible, setIsVisible] = useState(true);
+  const [isContentReady, setIsContentReady] = useState(false);
 
   const handleMinimize = () => {
     router.push("/");
   };
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setIsContentReady(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(() => {
       closeApp(id);
       router.push("/");
-    }, 100);
+    }, 300);
   };
 
   const variants = {
@@ -49,7 +58,6 @@ const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
             animate="animate"
             exit={reducedMotion ? { opacity: 0 } : "exit"}
             variants={variants}
-            // Set duration to 0 if motion is reduced
             transition={{
               duration: reducedMotion ? 0 : 0.3,
               type: "spring",
@@ -67,7 +75,26 @@ const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
 
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-950/50">
-              {children}
+              <AnimatePresence mode="wait">
+                {!isContentReady ? (
+                  <motion.div
+                    key="window-loader"
+                    exit={{ opacity: 0 }}
+                    className="h-full w-full"
+                  >
+                    <WindowLoading />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="window-content"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="h-full w-full"
+                  >
+                    {children}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         )}

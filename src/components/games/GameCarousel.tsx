@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
-import { Wifi, BatteryMedium, MonitorX } from "lucide-react";
+import { Wifi, BatteryMedium, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Game } from "@/data/games";
+import TitleArea from "./TitleDescription";
 
 const CARD_SIZE = 268;
 const CARD_GAP = 24;
@@ -71,12 +72,12 @@ const GameCarousel = ({
 
   const activeGameData = getGame(activeIndex);
   const activeDescription = activeGameData.description ?? "";
-  const isUnsupported = isMobile && activeGameData.desktopOnly;
+  const isUnsupported = isMobile && activeGameData.desktopOnly || false;
 
   return (
     <>
       {/* System Info Header */}
-      <div className="grid w-full grid-cols-3 items-center px-8 pt-6 opacity-80">
+      <div className="grid w-full grid-cols-3 items-center px-8 md:pt-6 pt-4 opacity-80">
         {/* User Icon (Top Left) */}
         <div className="flex items-center justify-start gap-4">
           <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-400/30 bg-gray-300 dark:bg-gray-700">
@@ -127,24 +128,9 @@ const GameCarousel = ({
         </div>
       </div>
 
-      {/* Title Area */}
-      <div className="z-20 mb-8 flex flex-col items-center pt-4 text-left md:ml-[15%] md:items-start md:text-left">
-        <div className="flex items-center justify-center gap-4 md:justify-start">
-          <div className="h-6 w-1 rounded-full bg-[#00C3E3]" />
-          <h2 className="text-xl font-medium text-[#00C3E3] md:text-2xl">
-            {activeGameData.title}
-            {/* Mobile Warning Badge */}
-            {isUnsupported && (
-              <span className="ml-2 inline-flex items-center gap-2 rounded px-2 py-1 text-sm font-black tracking-tighter text-red-500 uppercase">
-                <MonitorX size={14} aria-label="desktop only" />
-                <span className="sr-only">desktop only</span>
-              </span>
-            )}
-          </h2>
-        </div>
-        <p className="mt-1 ml-3 min-h-12 w-2/3 text-center text-xs font-bold tracking-widest text-gray-400 uppercase md:min-h-2 md:text-left">
-          {activeDescription}
-        </p>
+      {/* Title Area (Desktop) */}
+      <div className="hidden md:block">
+        <TitleArea title={activeGameData.title} description={activeDescription} isUnsupported={isUnsupported} />
       </div>
 
       {/* Carousel Track */}
@@ -255,23 +241,27 @@ const GameCarousel = ({
         </div>
 
         {isMobile && (
-          <div className="absolute inset-0 flex items-center justify-between px-4 md:hidden">
+          <div className="absolute inset-0 flex items-center justify-between px-0 md:hidden">
             <button
               aria-label="Previous game"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-700 shadow dark:bg-gray-800/80 dark:text-white"
+              className="flex h-15 w-15 items-center justify-center  text-gray-700 shadow dark:text-white"
               onClick={() => onNavigate(-1)}
             >
-              {"<"}
+              <ChevronLeft size={30}/>
             </button>
             <button
               aria-label="Next game"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-700 shadow dark:bg-gray-800/80 dark:text-white"
+              className="flex h-15 w-15 items-center justify-center  text-gray-700 shadow dark:text-white"
               onClick={() => onNavigate(1)}
             >
-              {">"}
+              <ChevronRight size={30}/>
             </button>
           </div>
         )}
+
+      </div>
+      <div className="md:hidden block">
+        <TitleArea title={activeGameData.title} description={activeDescription} isUnsupported={isUnsupported} />
       </div>
     </>
   );

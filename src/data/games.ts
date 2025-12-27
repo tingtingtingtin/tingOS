@@ -28,7 +28,7 @@ export const games: Game[] = [
     id: "livelaughdie",
     title: "Live Laugh Die (2024)",
     description: "Bullet hell game that laughs at you when you fail!",
-    color: "#000000",
+    color: "#0C0C0D",
     thumbnail:
       "https://github.com/ajarean/ggj-bullet-hell/blob/main/Assets/Sprites/thing.png?raw=true",
     embedUrl: "https://itch.io/embed-upload/9610018?color=000000",

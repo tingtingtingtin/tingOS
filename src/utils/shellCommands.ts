@@ -185,21 +185,95 @@ const handleTree: CommandHandler = (_, ctx) => {
   return normalize(buildTree(getNodeAtPath(ctx.root, ctx.currentPath)));
 };
 
-// TODO: grep
-// TODO: exit
-// TODO: touch/mkdir
+const handleExit: CommandHandler = (_, ctx) => {
+  const { closeApp } = useOSStore.getState();
+  closeApp("terminal");
+  ctx.router.push("/");
+  return "";
+};
+
+const handleGrep: CommandHandler = async ([pattern, filename], ctx) => {
+  if (!pattern || !filename) return "usage: grep <pattern> <file>";
+  
+  const { node } = resolvePath(ctx.root, ctx.currentPath, filename);
+  if (!node) return `grep: ${filename}: No such file or directory`;
+  if (node.type === "dir") return `grep: ${filename}: Is a directory`;
+
+  const content = await getFileContent(node);
+  const lines = content.split("\n");
+  const matches = lines
+    .map((line, i) => ({ line, num: i + 1 }))
+    .filter(({ line }) => line.toLowerCase().includes(pattern.toLowerCase()))
+    .map(({ line, num }) => {
+      const regex = new RegExp(`(${pattern})`, "gi");
+      const highlightedLine = line.replace(regex, `${C.Red}$1${C.Reset}`);
+      return `${C.Yellow}${num}${C.Reset}: ${highlightedLine}`;
+    });
+
+  return matches.length > 0 ? normalize(matches.join("\n")) : `No matches found for '${pattern}'`;
+};
+
+const handleTouch: CommandHandler = ([filename], ctx) => {
+  if (!filename) return "usage: touch <filename>";
+  if (filename.includes("/")) return "touch: cannot create file with path separators";
+
+  const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
+  if (!currentNode.children) return "touch: cannot create file here";
+  
+  if (currentNode.children[filename]) {
+    return `touch: '${filename}' already exists`;
+  }
+
+  const newPath = ctx.currentPath.concat(filename).join("/");
+
+  currentNode.children[filename] = {
+    name: filename,
+    type: "file",
+    path: newPath,
+    content: "",
+  };
+
+  return "";
+};
+
+const handleMkdir: CommandHandler = ([dirname], ctx) => {
+  if (!dirname) return "usage: mkdir <directory>";
+  if (dirname.includes("/")) return "mkdir: cannot create directory with path separators";
+
+  const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
+  if (!currentNode.children) return "mkdir: cannot create directory here";
+  
+  if (currentNode.children[dirname]) {
+    return `mkdir: cannot create directory '${dirname}': File exists`;
+  }
+
+  const newPath = ctx.currentPath.concat(dirname).join("/");
+
+  currentNode.children[dirname] = {
+    name: dirname,
+    type: "dir",
+    path: newPath,
+    children: {},
+  };
+
+  return "";
+};
+
+// TODO: js (sandboxed eval())
 
 const handleHelp: CommandHandler = () =>
   normalize(`
 Available commands:
-  ${C.Bright}ls${C.Reset}      List directory contents
-  ${C.Bright}cd${C.Reset}      Change directory
-  ${C.Bright}cat${C.Reset}     Print file content
-  ${C.Bright}pwd${C.Reset}     Print working directory
-  ${C.Bright}open${C.Reset}    [projects|contact|resume] Open app
-  ${C.Bright}theme${C.Reset}   [dark|light] Change website theme
-  ${C.Bright}whoami${C.Reset}  Display user info
-  ${C.Bright}clear${C.Reset}   Clear screen
+  ${C.Bright}ls${C.Reset}        List directory contents
+  ${C.Bright}cd${C.Reset}        Change directory
+  ${C.Bright}cat${C.Reset}       Print file content
+  ${C.Bright}pwd${C.Reset}       Print working directory
+  ${C.Bright}grep${C.Reset}      Search for pattern in file
+  ${C.Bright}clear${C.Reset}     Clear screen
+  ${C.Bright}open${C.Reset}      Open app (projects|contact|resume|about|experience)
+  ${C.Bright}theme${C.Reset}     Change theme (dark|light)
+  ${C.Bright}whoami${C.Reset}    Display user info
+  ${C.Bright}exit${C.Reset}      Close terminal
 `);
 
 export const commandHandlers: Record<string, CommandHandler> = {
@@ -207,7 +281,9 @@ export const commandHandlers: Record<string, CommandHandler> = {
   cd: handleCd,
   cat: handleCat,
   pwd: handlePwd,
+  grep: handleGrep,
   clear: handleClear,
+  exit: handleExit,
   whoami: handleWhoami,
   theme: handleTheme,
   open: handleOpen,
@@ -216,6 +292,8 @@ export const commandHandlers: Record<string, CommandHandler> = {
   cowsay: handleCowsay,
   sudo: handleSudo,
   echo: handleEcho,
+  touch: handleTouch,
+  mkdir: handleMkdir,
   date: handleDate,
   tree: handleTree,
   "": () => "", // handles blank enter

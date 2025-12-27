@@ -259,7 +259,37 @@ const handleMkdir: CommandHandler = ([dirname], ctx) => {
   return "";
 };
 
-// TODO: js (sandboxed eval())
+const handleJs: CommandHandler = (args) => {
+  const code = args.join(" ");
+  if (!code) return "usage: js <code_to_execute>";
+
+  let output = "";
+  // Intercept console.log
+  const originalLog = console.log;
+  console.log = (...args) => {
+    output += args.join(" ") + "\n";
+  };
+
+  try {
+    const result = eval(code);
+    console.log = originalLog; // Restore immediately
+    return normalize(output + (result !== undefined ? result : ""));
+  } catch (err) {
+    console.log = originalLog; // Restore on error
+    return `${C.Red}Error: ${err}${C.Reset}`;
+  }
+};
+
+const handleRm: CommandHandler = ([target], ctx) => {
+  if (!target) return "usage: rm <file|directory>";
+  
+  const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
+  if (currentNode.children && currentNode.children[target]) {
+    delete currentNode.children[target];
+    return "";
+  }
+  return `rm: cannot remove '${target}': No such file or directory`;
+};
 
 const handleHelp: CommandHandler = () =>
   normalize(`
@@ -289,11 +319,13 @@ export const commandHandlers: Record<string, CommandHandler> = {
   open: handleOpen,
   help: handleHelp,
   // Easter egg commands (Hi there!)
+  js: handleJs,
   cowsay: handleCowsay,
   sudo: handleSudo,
   echo: handleEcho,
   touch: handleTouch,
   mkdir: handleMkdir,
+  rm: handleRm,
   date: handleDate,
   tree: handleTree,
   "": () => "", // handles blank enter

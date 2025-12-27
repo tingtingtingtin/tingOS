@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { User, ChevronUp, ArrowRight, Lock, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type UserType = "guest" | "admin";
 
@@ -35,10 +36,22 @@ export default function BootManager() {
   const [isBooting, setIsBooting] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
 
+  const router = useRouter();
+
+  const prefetchEverything = useCallback(() => {
+    const routes = ["/", "/about", "/projects", "/experience", "/contact", "/resume", "/terminal"];
+    routes.forEach((route, index) => {
+      setTimeout(() => {
+        router.prefetch(route);
+      }, index * 100);
+    });
+  }, [router]);
+
   useEffect(() => {
     if (sessionStorage.getItem("tingOS_unlocked")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setView("booted");
+      prefetchEverything();
     } else {
       setView("lock");
     }
@@ -58,7 +71,7 @@ export default function BootManager() {
       clearInterval(timer);
       window.removeEventListener("os-lock", handleLockEvent);
     };
-  }, []);
+  }, [prefetchEverything]);
 
   const handleUnlock = () => {
     if (view === "lock") setView("login");
@@ -99,6 +112,7 @@ export default function BootManager() {
       clearInterval(msgInterval);
       sessionStorage.setItem("tingOS_unlocked", "true");
       setView("booted");
+      prefetchEverything();
       setTimeout(() => setIsBooting(false), 500);
     }, 1600);
   };

@@ -35,6 +35,12 @@ const DesktopIcon = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handlePrefetch = () => {
+    if (!url && route) {
+      router.prefetch(route);
+    }
+  };
+
   const executeOpen = () => {
     if (url) {
       window.open(url, "_blank")?.focus();
@@ -51,6 +57,7 @@ const DesktopIcon = ({
       executeOpen();
     } else {
       setIsSelected(true);
+      handlePrefetch();
     }
   };
 
@@ -67,7 +74,7 @@ const DesktopIcon = ({
       onClick={handleInteraction}
       onDoubleClick={executeOpen}
       onKeyDown={handleKeyDown}
-      onFocus={() => setIsSelected(true)}
+      onFocus={() => handleInteraction}
       onBlur={() => setIsSelected(false)}
       aria-label={`Open ${label}`}
       className={`group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-md p-2 transition-all duration-100 ${

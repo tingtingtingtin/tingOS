@@ -14,7 +14,7 @@ const ExperienceApp = () => {
   const feedData = tweets.filter((t) => t.type === activeTab);
 
   return (
-    <WindowFrame id="experiences" title="Xperiences">
+    <WindowFrame id="experience" title="Xperiences">
       <div className="flex min-h-full flex-col bg-white dark:bg-black">
         {/* Sticky Header / Tabs */}
         <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-black/80">

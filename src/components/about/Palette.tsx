@@ -43,6 +43,7 @@ const Palette = () => {
 
   const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
   const [pointerInside, setPointerInside] = useState(false);
+  const [hasFinePointer, setHasFinePointer] = useState(true);
 
   // Mobile Popover States
   const [showMobileSize, setShowMobileSize] = useState(false);
@@ -52,6 +53,19 @@ const Palette = () => {
   useEffect(() => {
     if (window.innerWidth >= 768) {
       setMode("brush");
+    }
+  }, []);
+
+  // Detect pointer capabilities (fine vs coarse)
+  useEffect(() => {
+    try {
+      const fine =
+        window.matchMedia &&
+        (window.matchMedia("(pointer: fine)").matches ||
+          window.matchMedia("(any-pointer: fine)").matches);
+      setHasFinePointer(!!fine);
+    } catch {
+      setHasFinePointer(true);
     }
   }, []);
 
@@ -163,25 +177,32 @@ const Palette = () => {
     setIsDrawing(true);
   };
 
+  const drawingRequestRef = useRef<number | null>(null);
+
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing || mode === "hand") return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (drawingRequestRef.current) return;
+    drawingRequestRef.current = requestAnimationFrame(() => {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d");
+      const pos = getPosFromMouse(e as any);
+      
+      if (!ctx || !pos || !lastPoint.current) {
+        drawingRequestRef.current = null;
+        return;
+      }
 
-    const pos = getPosFromMouse(e as any);
-    if (!pos || !lastPoint.current) return;
+      const midX = (lastPoint.current.x + pos.x) / 2;
+      const midY = (lastPoint.current.y + pos.y) / 2;
 
-    const midX = (lastPoint.current.x + pos.x) / 2;
-    const midY = (lastPoint.current.y + pos.y) / 2;
+      setCtxForTool(ctx);
+      ctx.quadraticCurveTo(lastPoint.current.x, lastPoint.current.y, midX, midY);
+      ctx.stroke();
 
-    setCtxForTool(ctx);
-    ctx.quadraticCurveTo(lastPoint.current.x, lastPoint.current.y, midX, midY);
-    ctx.stroke();
-
-    lastPoint.current = pos;
-    moved.current = true;
+      lastPoint.current = pos;
+      moved.current = true;
+      drawingRequestRef.current = null; // Reset for next frame
+    });
   };
 
   const stopDrawing = useCallback(
@@ -234,7 +255,7 @@ const Palette = () => {
     if (!c) return;
 
     const handleMove = (ev: MouseEvent) => {
-      if (mode === "hand") return;
+      if (mode === "hand" || !hasFinePointer) return;
       const rect = c.getBoundingClientRect();
       setCursor({ x: ev.clientX - rect.left, y: ev.clientY - rect.top });
     };
@@ -279,7 +300,7 @@ const Palette = () => {
       window.removeEventListener("touchend", handleWindowUp);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [mode, stopDrawing]);
+  }, [mode, stopDrawing, hasFinePointer]);
 
   return (
     <div className="flex h-full flex-col-reverse bg-gray-50 font-sans text-gray-800 md:flex-row dark:bg-gray-900 dark:text-gray-100">
@@ -469,8 +490,8 @@ const Palette = () => {
           style={{ background: "transparent" }}
         />
 
-        {/* Desktop Brush Cursor */}
-        {mode !== "hand" && pointerInside && cursor && (
+        {/* Brush Cursor (only on fine-pointer devices) */}
+        {hasFinePointer && mode !== "hand" && pointerInside && cursor && (
           <motion.div
             initial={false}
             animate={{ x: cursor.x, y: cursor.y }}

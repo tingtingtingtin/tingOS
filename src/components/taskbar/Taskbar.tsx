@@ -16,6 +16,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import TimeDisplay from "./TimeDisplay";
 import SettingsPanel from "./SettingsPanel";
+import AppIcon from "./AppIcon";
 
 const Taskbar = () => {
   const pathname = usePathname();
@@ -27,6 +28,11 @@ const Taskbar = () => {
   const toggleMotion = useOSStore((s) => s.toggleMotion);
   const darkMode = useOSStore((s) => s.darkMode);
   const toggleDarkMode = useOSStore((s) => s.toggleDarkMode);
+
+  const isRouteActive = (route: string) => {
+    if (route === "/") return pathname === "/";
+    return pathname === route || pathname.startsWith(`${route}/`);
+  };
 
   // UI States
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -43,7 +49,6 @@ const Taskbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (ev: MouseEvent) => {
-      // FIX: Check BOTH refs. If click is in Desktop Settings OR Mobile Menu, ignore it.
       const clickedInsideDesktop =
         settingsRef.current && settingsRef.current.contains(ev.target as Node);
       const clickedInsideMobile =
@@ -66,7 +71,7 @@ const Taskbar = () => {
 
   const handleAppClick = (appId: string, route: string) => {
     setMobileTabsOpen(false);
-    const isActive = pathname === route;
+    const isActive = isRouteActive(route);
     if (isActive) {
       router.push("/");
     } else {
@@ -100,32 +105,17 @@ const Taskbar = () => {
         {/* App Icons */}
         <div className="flex items-center gap-2">
           {desktopTaskbarApps.map((app) => {
-            const isActive = pathname === app.route;
+            const isActive = isRouteActive(app.route);
             const isRunning = runningApps.includes(app.id);
 
             return (
-              <button
+              <AppIcon
                 key={app.id}
+                app={app}
+                isActive={isActive}
+                isRunning={isRunning}
                 onClick={() => handleAppClick(app.id, app.route)}
-                className={`group relative flex h-10 w-10 items-center justify-center rounded transition-all ${isActive ? "bg-black/10 dark:bg-white/15" : "hover:bg-black/5 dark:hover:bg-white/10"} `}
-              >
-                <app.icon
-                  size={20}
-                  className={
-                    isActive
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-gray-600 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-white"
-                  }
-                />
-                {isRunning && (
-                  <div
-                    className={`absolute -bottom-1 h-1 w-1 rounded-full transition-all ${isActive ? "w-4 bg-blue-600 dark:bg-blue-400" : "bg-gray-400 dark:bg-gray-400"} `}
-                  />
-                )}
-                <span className="pointer-events-none absolute -top-10 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                  {app.label}
-                </span>
-              </button>
+              />
             );
           })}
         </div>
@@ -135,24 +125,42 @@ const Taskbar = () => {
           className="ml-auto flex items-center text-sm font-medium text-gray-900 tabular-nums dark:text-white"
           ref={settingsRef}
         >
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
-            onClick={handleLock}
-          >
-            <FaLock size={16} />
-          </button>
+          <div className="group relative">
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
+              onClick={handleLock}
+              aria-label="Lock System"
+            >
+              <FaLock size={16} />
+            </button>
+            <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+              Lock System
+            </span>
+          </div>
 
-          <button className="flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10">
-            <FaQuestionCircle size={18} />
-          </button>
+          <div className="group relative">
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
+              aria-label="Help (WIP)"
+            >
+              <FaQuestionCircle size={18} />
+            </button>
+            <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+              Help (WIP)
+            </span>
+          </div>
 
-          <div className="relative">
+          <div className="group relative">
             <button
               className="flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
               onClick={() => setSettingsOpen((s) => !s)}
+              aria-label="Settings"
             >
               <FaCog size={18} />
             </button>
+            <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded border border-gray-200 bg-white px-2 py-1 text-xs whitespace-nowrap text-gray-900 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+              Settings
+            </span>
             {settingsOpen && (
               <SettingsPanel
                 reducedMotion={reducedMotion}
@@ -271,7 +279,7 @@ const Taskbar = () => {
                     key={app.id}
                     onClick={() => handleAppClick(app.id, app.route)}
                     className={`flex flex-col items-center justify-center gap-3 rounded-2xl border p-6 transition-all ${
-                      pathname === app.route
+                      isRouteActive(app.route)
                         ? "border-blue-500/50 bg-blue-500/20"
                         : "border-white/20 bg-white/40 dark:border-white/10 dark:bg-gray-800/40"
                     } `}
@@ -279,7 +287,7 @@ const Taskbar = () => {
                     <app.icon
                       size={42}
                       className={
-                        pathname === app.route
+                        isRouteActive(app.route)
                           ? "text-blue-600 dark:text-blue-400"
                           : "text-gray-700 dark:text-gray-300"
                       }

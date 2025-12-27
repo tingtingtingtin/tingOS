@@ -23,7 +23,7 @@ const LOADING_MESSAGES = [
   "Running self-diagnostics...",
 ];
 
-export default function BootManager() {
+const BootManager = () => {
   const [view, setView] = useState<"lock" | "login" | "booted" | "init">(
     "init",
   );
@@ -389,4 +389,6 @@ export default function BootManager() {
       </motion.div>
     </AnimatePresence>
   );
-}
+};
+
+export default BootManager;

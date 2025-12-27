@@ -9,11 +9,11 @@ interface ControlButtonsProps {
   isMobile: boolean;
 }
 
-export function ControlButtons({
+const ControlButtons = ({
   onSelect,
   activeGameData,
   isMobile,
-}: ControlButtonsProps) {
+}: ControlButtonsProps) => {
   const hasGithub = Boolean(activeGameData.githubUrl);
   const hasExternal = Boolean(activeGameData.extUrl);
   const hasEmbed = Boolean(activeGameData.embedUrl);
@@ -106,4 +106,6 @@ export function ControlButtons({
       </div>
     </>
   );
-}
+};
+
+export default ControlButtons;

@@ -19,14 +19,14 @@ interface GameCarouselProps {
   time: string;
 }
 
-export function GameCarousel({
+const GameCarousel = ({
   isMobile,
   activeIndex,
   games,
   onNavigate,
   onSelect,
   time,
-}: GameCarouselProps) {
+}: GameCarouselProps) => {
   const [showProgress, setShowProgress] = useState(true);
   const [isLaunching, setIsLaunching] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -218,7 +218,9 @@ export function GameCarousel({
               >
                 <div
                   onClick={() =>
-                    isCenter ? handleSelect() : onNavigate(offset)
+                    !isUnsupported && isCenter
+                      ? handleSelect()
+                      : onNavigate(offset)
                   }
                   className={`group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"} ${isLaunching && isCenter ? "ring-12 ring-white/50 duration-150" : ""} `}
                 >
@@ -273,4 +275,6 @@ export function GameCarousel({
       </div>
     </>
   );
-}
+};
+
+export default GameCarousel;

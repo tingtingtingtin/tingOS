@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { games } from "@/data/games";
-import { GameModal } from "./GameModal";
-import { GameCarousel } from "./GameCarousel";
-import { ControlButtons } from "./ControlButtons";
+import GameModal from "./GameModal";
+import GameCarousel from "./GameCarousel";
+import ControlButtons from "./ControlButtons";
 
-export default function GamesConsole() {
+const GamesConsole = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGame, setSelectedGame] = useState<(typeof games)[0] | null>(
     null,
@@ -125,4 +125,6 @@ export default function GamesConsole() {
       <GameModal selectedGame={selectedGame} onClose={handleClose} />
     </div>
   );
-}
+};
+
+export default GamesConsole;

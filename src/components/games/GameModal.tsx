@@ -8,7 +8,7 @@ interface GameModalProps {
   onClose: () => void;
 }
 
-export function GameModal({ selectedGame, onClose }: GameModalProps) {
+const GameModal = ({ selectedGame, onClose }: GameModalProps) => {
   return (
     <AnimatePresence>
       {selectedGame && (
@@ -49,4 +49,6 @@ export function GameModal({ selectedGame, onClose }: GameModalProps) {
       )}
     </AnimatePresence>
   );
-}
+};
+
+export default GameModal;

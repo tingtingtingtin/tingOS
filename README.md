@@ -83,10 +83,12 @@ Open [http://localhost:3000](http://localhost:3000) to view. You may need ngrok 
 ## Performance & Mobile Optimizations
 
 ### Interaction Latency (INP)
+
 - Disabled expensive React state updates for cursor previews on touch devices
 - Transitioned canvas rendering to `requestAnimationFrame` to decouple drawing from main thread
 
 ### Prefetching Strategy
+
 - **Boot-time**: Background-loads all primary routes during the 1.6s boot animation
 - **Intent-based**: Dynamically prefetches application chunks on icon hover/keyboard focus
 - Standardized boot manager initialization to prevent "hydration flicker" on lock screen for authenticated users

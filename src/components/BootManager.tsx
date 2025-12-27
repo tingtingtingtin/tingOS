@@ -23,8 +23,10 @@ const LOADING_MESSAGES = [
   "Running self-diagnostics...",
 ];
 
-export default function BootManager() {
-  const [view, setView] = useState<"lock" | "login" | "booted" | "init">("init");
+const BootManager = () => {
+  const [view, setView] = useState<"lock" | "login" | "booted" | "init">(
+    "init",
+  );
   const [time, setTime] = useState<Date | null>(null);
 
   // Auth States
@@ -39,7 +41,15 @@ export default function BootManager() {
   const router = useRouter();
 
   const prefetchEverything = useCallback(() => {
-    const routes = ["/", "/about", "/projects", "/experience", "/contact", "/resume", "/terminal"];
+    const routes = [
+      "/",
+      "/about",
+      "/projects",
+      "/experience",
+      "/contact",
+      "/resume",
+      "/terminal",
+    ];
     routes.forEach((route, index) => {
       setTimeout(() => {
         router.prefetch(route);
@@ -379,4 +389,6 @@ export default function BootManager() {
       </motion.div>
     </AnimatePresence>
   );
-}
+};
+
+export default BootManager;

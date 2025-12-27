@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "motion/react";
 import TimeDisplay from "./TimeDisplay";
 import SettingsPanel from "./SettingsPanel";
 import AppIcon from "./AppIcon";
+import MobileTabsOverlay from "./MobileTabsOverlay";
 
 const Taskbar = () => {
   const pathname = usePathname();
@@ -41,11 +42,6 @@ const Taskbar = () => {
   // REFS
   const settingsRef = useRef<HTMLDivElement | null>(null); // For Desktop
   const mobileMenuRef = useRef<HTMLDivElement | null>(null); // For Mobile
-
-  const transition = {
-    duration: 0.25,
-    ease: [0, 0.71, 0.2, 1.01],
-  } as const;
 
   useEffect(() => {
     const handleClickOutside = (ev: MouseEvent) => {
@@ -83,8 +79,6 @@ const Taskbar = () => {
   const desktopTaskbarApps = apps.filter(
     (app) => app.isPinned || runningApps.includes(app.id),
   );
-
-  const mobileRunningApps = apps.filter((app) => runningApps.includes(app.id));
 
   return (
     <>
@@ -246,62 +240,12 @@ const Taskbar = () => {
         )}
       </AnimatePresence>
 
-      {/* MOBILE TABS OVERLAY */}
-      <AnimatePresence mode="wait">
-        {mobileTabsOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={transition}
-            className="fixed inset-0 z-49 mb-16 flex flex-col rounded-t-md bg-white/60 p-6 pt-12 backdrop-blur-2xl md:hidden dark:bg-black/60"
-          >
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-2xl font-bold dark:text-white">
-                Active Tabs
-              </h2>
-              <button
-                onClick={() => setMobileTabsOpen(false)}
-                className="rounded-full bg-black/5 p-3 dark:bg-white/10 dark:text-white"
-              >
-                <FaTimes size={20} />
-              </button>
-            </div>
-
-            {mobileRunningApps.length === 0 ? (
-              <div className="flex h-1/2 flex-col items-center justify-center text-gray-500">
-                <p>No apps running.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4">
-                {mobileRunningApps.map((app) => (
-                  <button
-                    key={app.id}
-                    onClick={() => handleAppClick(app.id, app.route)}
-                    className={`flex flex-col items-center justify-center gap-3 rounded-2xl border p-6 transition-all ${
-                      isRouteActive(app.route)
-                        ? "border-blue-500/50 bg-blue-500/20"
-                        : "border-white/20 bg-white/40 dark:border-white/10 dark:bg-gray-800/40"
-                    } `}
-                  >
-                    <app.icon
-                      size={42}
-                      className={
-                        isRouteActive(app.route)
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-300"
-                      }
-                    />
-                    <span className="font-medium dark:text-white">
-                      {app.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* MOBILE TABS OVERLAY (Refactored) */}
+      <MobileTabsOverlay
+        isOpen={mobileTabsOpen}
+        onClose={() => setMobileTabsOpen(false)}
+        onAppClick={handleAppClick}
+      />
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   Twitter,
   MessageCircle,
   Trash,
+  Gamepad,
 } from "lucide-react";
 
 export interface AppConfig {
@@ -67,6 +68,13 @@ export const apps: AppConfig[] = [
     label: "Terminal",
     icon: Terminal,
     route: "/terminal",
+    isPinned: false,
+  },
+  {
+    id: "games",
+    label: "Games",
+    icon: Gamepad,
+    route: "/games",
     isPinned: false,
   },
 ];

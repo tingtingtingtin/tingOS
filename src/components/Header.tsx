@@ -12,7 +12,7 @@ const Header = ({ title, onClose, onMinimize }: HeaderProps) => {
   return (
     <header
       // TODO: handle class for dragability
-      className="flex items-center justify-between border-b border-gray-300 bg-gray-200 p-2 select-none dark:border-gray-700 dark:bg-gray-800"
+      className="hidden items-center justify-between border-b border-gray-300 bg-gray-200 p-2 select-none md:flex dark:border-gray-700 dark:bg-gray-800"
     >
       <div className="flex items-center gap-2 px-2 text-sm font-semibold text-gray-600 dark:text-gray-300">
         {/* TODO: Add a small icon here based on the app later */}

@@ -71,10 +71,7 @@ const MessengerApp = () => {
 
     if (step === "category") {
       setFormData((prev) => ({ ...prev, category: text }));
-      botReply(
-        `Got it! Please provide any additional details.`,
-        "details",
-      );
+      botReply(`Got it! Please provide any additional details.`, "details");
     } else if (step === "details") {
       setFormData((prev) => ({ ...prev, message: text }));
       botReply(

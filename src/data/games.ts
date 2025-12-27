@@ -1,12 +1,12 @@
 export interface Game {
   id: string;
   title: string;
-  description: string;
-  thumbnail: string;
+  description?: string;
+  thumbnail?: string;
   color?: string;
-  embedUrl: string;
-  githubUrl: string;
-  extUrl: string;
+  embedUrl?: string;
+  githubUrl?: string;
+  extUrl?: string;
 }
 
 export const games: Game[] = [
@@ -47,5 +47,10 @@ export const games: Game[] = [
     embedUrl: "https://hurdle-vert.vercel.app/",
     githubUrl: "https://github.com/tingtingtingtin/hurdle",
     extUrl: "https://hurdle-vert.vercel.app/",
+  },
+  {
+    id: "coming-soon",
+    title: "Coming Soon",
+    description: "More is on the way. Stay tuned!",
   },
 ];

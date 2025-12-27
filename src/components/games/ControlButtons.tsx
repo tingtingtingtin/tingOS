@@ -12,52 +12,61 @@ export function ControlButtons({
   onSelect,
   activeGameData,
 }: ControlButtonsProps) {
+  const hasGithub = Boolean(activeGameData.githubUrl);
+  const hasExternal = Boolean(activeGameData.extUrl);
+  const hasEmbed = Boolean(activeGameData.embedUrl);
+
   return (
     <>
       {/* --- BOTTOM ROW (System Buttons) --- */}
       <div className="relative z-30 mb-3 flex items-center justify-center gap-8">
         {/* Button 1: GitHub */}
-        <div
-          className="flex flex-col items-center gap-2 group cursor-pointer"
-          onClick={() =>
-            window.open(activeGameData.githubUrl || "https://github.com", "_blank")
-          }
-        >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
-            <Github size={24} />
+        {hasGithub && (
+          <div
+            className="flex flex-col items-center gap-2 group cursor-pointer"
+            onClick={() =>
+              activeGameData.githubUrl &&
+              window.open(activeGameData.githubUrl, "_blank")
+            }
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+              <Github size={24} />
+            </div>
+            <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+              Source
+            </span>
           </div>
-          <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
-            Source
-          </span>
-        </div>
+        )}
 
         {/* Center: Play Indicator */}
         <div
-          className="flex flex-col items-center gap-2 group cursor-pointer"
-          onClick={onSelect}
+          className={`flex flex-col items-center gap-2 group ${hasEmbed ? "cursor-pointer" : "cursor-not-allowed mr-4"}`}
+          onClick={() => hasEmbed && onSelect()}
         >
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d]">
+          <div className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${hasEmbed ? "group-hover:scale-110 group-active:scale-95" : "opacity-50"} dark:bg-[#3d3d3d]`}>
             <Play fill="currentColor" size={28} className="ml-1" />
           </div>
           <span className="text-xs font-bold tracking-tight text-[#00C3E3]">
-            Start
+            {hasEmbed ? "Start" : "Unavailable"}
           </span>
         </div>
 
         {/* Button 3: External Link */}
-        <div
-          className="flex flex-col items-center gap-2 group cursor-pointer"
-          onClick={() =>
-            window.open(activeGameData.extUrl || activeGameData.embedUrl, "_blank")
-          }
-        >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
-            <Globe size={24} />
+        {hasExternal && (
+          <div
+            className="flex flex-col items-center gap-2 group cursor-pointer"
+            onClick={() =>
+              activeGameData.extUrl && window.open(activeGameData.extUrl, "_blank")
+            }
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+              <Globe size={24} />
+            </div>
+            <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+              External Link
+            </span>
           </div>
-          <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
-            External Link
-          </span>
-        </div>
+        )}
       </div>
 
       {/* --- CONTROLS FOOTER --- */}

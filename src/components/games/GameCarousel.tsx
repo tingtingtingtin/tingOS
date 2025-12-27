@@ -33,6 +33,7 @@ export function GameCarousel({
   };
 
   const activeGameData = getGame(activeIndex);
+  const activeDescription = activeGameData.description ?? "";
 
   return (
     <>
@@ -45,7 +46,7 @@ export function GameCarousel({
           </h2>
         </div>
         <p className="ml-3 mt-1 text-xs font-bold text-gray-400 uppercase tracking-widest">
-          {activeGameData.description}
+          {activeDescription}
         </p>
       </div>
 
@@ -56,6 +57,8 @@ export function GameCarousel({
             const game = getGame(index);
             const isCenter = index === activeIndex;
             const offset = index - activeIndex;
+            const backgroundColor = game.color ?? "transparent";
+            const hasThumbnail = Boolean(game.thumbnail);
 
             return (
               <motion.div
@@ -97,33 +100,23 @@ export function GameCarousel({
                           : "shadow-lg"
                       }
                     `}
+                    style={{ backgroundColor }}
                   >
-                    <Image
-                      src={game.thumbnail}
-                      alt={game.title}
-                      width={1000}
-                      height={1000}
-                      className={`h-full w-full object-cover bg-[${game.color}]`}
-                    />
-                  </div>
-
-                  {/* Reflection */}
-                </div>
-                {isCenter && (
-                  <div className="absolute -bottom-30 left-0 right-0 h-full w-full opacity-20 pointer-events-none">
-                    <div className="h-full w-full scale-y-[-1] transform">
+                    {hasThumbnail ? (
                       <Image
-                        src={game.thumbnail}
-                        alt=""
+                        src={game.thumbnail as string}
+                        alt={game.title}
                         width={1000}
                         height={1000}
-                        className="h-full w-full object-cover blur-[2px]"
+                        className="h-full w-full object-cover"
                       />
-                    </div>
-                    {/* Gradient Mask to fade out reflection */}
-                    <div className="absolute inset-0 bg-linear-to-t from-[#EBEBEB] via-[#EBEBEB]/95 to-transparent dark:from-[#2D2D2D] dark:via-[#2D2D2D]/95" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center px-6 text-center text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        {game.title}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </motion.div>
             );
           })}

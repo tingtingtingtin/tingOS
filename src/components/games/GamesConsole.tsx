@@ -53,7 +53,9 @@ export default function GamesConsole() {
     if (selectedGame) return;
     const len = games.length;
     const actualIndex = ((activeIndex % len) + len) % len;
-    setSelectedGame(games[actualIndex]);
+    const game = games[actualIndex];
+    if (!game.embedUrl) return;
+    setSelectedGame(game);
     playSound("select");
   }, [activeIndex, selectedGame]);
 

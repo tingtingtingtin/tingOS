@@ -27,11 +27,12 @@ export function GameCarousel({
 }: GameCarouselProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [showProgress, setShowProgress] = useState(true);
-  const prevIndexRef = useRef(activeIndex);
+  const [isLaunching, setIsLaunching] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const mouseDownX = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
   const hideProgressTimer = useRef<NodeJS.Timeout | null>(null);
+  const showProgressTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const updateIsMobile = () => setIsMobile(window.innerWidth < 768);
@@ -41,15 +42,27 @@ export function GameCarousel({
   }, []);
 
   useEffect(() => {
-    setShowProgress(true);
+    if (showProgressTimer.current) clearTimeout(showProgressTimer.current);
+    showProgressTimer.current = setTimeout(() => setShowProgress(true), 0);
+
     if (hideProgressTimer.current) clearTimeout(hideProgressTimer.current);
     hideProgressTimer.current = setTimeout(() => setShowProgress(false), 2000);
+
     return () => {
+      if (showProgressTimer.current) clearTimeout(showProgressTimer.current);
       if (hideProgressTimer.current) clearTimeout(hideProgressTimer.current);
     };
   }, [activeIndex]);
 
   const visibleRange = isMobile ? 0 : DESKTOP_VISIBLE_RANGE;
+
+  const handleSelect = () => {
+    setIsLaunching(true);
+    setTimeout(() => {
+      onSelect();
+      setIsLaunching(false);
+    }, 400); 
+  };
 
   const renderRange = [];
   for (let i = -visibleRange; i <= visibleRange; i++) {
@@ -84,7 +97,6 @@ export function GameCarousel({
             className="flex items-center justify-center gap-2 px-4"
           >
             {games.map((_, i) => {
-              // Determine the actual active game index (wrapped)
               const currentWrappedIndex = ((activeIndex % games.length) + games.length) % games.length;
               const isActive = i === currentWrappedIndex;
 
@@ -119,7 +131,7 @@ export function GameCarousel({
             {activeGameData.title}
           </h2>
         </div>
-        <p className="ml-3 mt-1 w-2/3 text-xs font-bold text-gray-400 uppercase tracking-widest text-center md:text-left min-h-12">
+        <p className="ml-3 mt-1 w-2/3 text-xs font-bold text-gray-400 uppercase tracking-widest text-center md:text-left min-h-12 md:min-h-2">
           {activeDescription}
         </p>
       </div>
@@ -174,7 +186,7 @@ export function GameCarousel({
                 initial={{ x: offset * (CARD_SIZE + CARD_GAP), scale: 0.8 }}
                 animate={{
                   x: offset * (CARD_SIZE + CARD_GAP),
-                  scale: isCenter ? 1.0 : 0.85,
+                  scale: isCenter ? (isLaunching ? 1.10 : 1.0) : 0.85,
                   opacity: Math.abs(offset) > visibleRange ? 0 : 1,
                   zIndex: isCenter ? 20 : 10 - Math.abs(offset),
                   rotateY: offset * 10,
@@ -185,21 +197,22 @@ export function GameCarousel({
                   damping: 30,
                   mass: 1,
                 }}
-                className="absolute top-4"
+                className={`absolute top-4 ${isLaunching && isCenter ? "z-50" : ""}`}
                 style={{
                   width: CARD_SIZE,
-                  height: CARD_SIZE, // Making it square based on your variable
+                  height: CARD_SIZE,
                   left: "50%",
-                  marginLeft: -(CARD_SIZE / 2), // This perfectly anchors the "0" point to the center
+                  marginLeft: -(CARD_SIZE / 2),
                 }}
               >
                 <div
                   onClick={() =>
-                    isCenter ? onSelect() : onNavigate(offset)
+                    isCenter ? handleSelect() : onNavigate(offset)
                   }
                   className={`
                     group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 
                     ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"}
+                    ${isLaunching && isCenter ? "ring-12 ring-white/50 duration-150" : ""}
                   `}
                 >
                   {/* Card */}

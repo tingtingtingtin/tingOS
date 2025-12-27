@@ -19,7 +19,7 @@ export function ControlButtons({
   return (
     <>
       {/* --- BOTTOM ROW (System Buttons) --- */}
-      <div className="relative z-30 md:mb-4 mb-20 flex items-center justify-center gap-8">
+      <div className="relative z-30 flex items-center justify-center gap-8">
         {/* Button 1: GitHub */}
         {hasGithub && (
           <div
@@ -70,7 +70,7 @@ export function ControlButtons({
       </div>
 
       {/* --- CONTROLS FOOTER --- */}
-      <div className="hidden md:flex w-full items-center justify-between border-t border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
+      <div className="hidden md:flex w-full items-center justify-between border-t mb-2 z-20 mt-auto border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="flex gap-1">

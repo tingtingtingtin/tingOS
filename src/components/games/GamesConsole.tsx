@@ -81,7 +81,7 @@ export default function GamesConsole() {
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
-      <div className="relative flex flex-1 flex-col justify-center">
+
         <GameCarousel 
           activeIndex={activeIndex}
           games={games}
@@ -89,7 +89,6 @@ export default function GamesConsole() {
           onSelect={handleSelect}
           time={time}
         />
-      </div>
 
       <ControlButtons 
         activeGameData={getGame(activeIndex)}

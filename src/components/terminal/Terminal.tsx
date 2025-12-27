@@ -6,6 +6,7 @@ import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 import { FileNode } from "@/utils/vfs";
 import { processCommand, formatPrompt } from "@/utils/shell";
+import { getNodeAtPath } from "@/utils/pathUtils";
 
 interface TerminalProps {
   fs: FileNode;
@@ -129,6 +130,49 @@ const Terminal = ({
         if (cursorPos.current < inputBuffer.current.length) {
           cursorPos.current++;
           term.write(key);
+        }
+        return;
+      }
+
+      if (charCode === 9) {
+        // Tab key
+        const currentLine = inputBuffer.current.slice(0, cursorPos.current);
+        const words = currentLine.split(/\s+/);
+        const lastWord = words[words.length - 1];
+
+        if (!lastWord && words.length > 1) return;
+
+        if (fsRef.current) {
+          const currentNode = getNodeAtPath(fsRef.current, pathRef.current);
+          if (currentNode.children) {
+            // case blind search
+            const matches = Object.keys(currentNode.children).filter((name) =>
+              name.toLowerCase().startsWith(lastWord.toLowerCase()),
+            );
+
+            if (matches.length === 1) {
+              const matchedName = matches[0];
+              const isDir = currentNode.children[matchedName].type === "dir";
+              const suffix = isDir ? "/" : " ";
+
+              const lineBeforeLastWord = currentLine.slice(
+                0,
+                currentLine.length - lastWord.length,
+              );
+              const rightSide = inputBuffer.current.slice(cursorPos.current);
+
+              inputBuffer.current =
+                lineBeforeLastWord + matchedName + suffix + rightSide;
+
+              cursorPos.current = (
+                lineBeforeLastWord +
+                matchedName +
+                suffix
+              ).length;
+
+              refreshLine();
+            }
+          }
         }
         return;
       }

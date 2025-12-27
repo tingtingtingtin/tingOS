@@ -78,8 +78,7 @@ const handleCd: CommandHandler = ([arg], ctx) => {
   if (node && node.type === "dir") {
     ctx.setPath(newPath);
     return "";
-  }
-  else if (node) return `cd: ${arg} is a file`;
+  } else if (node) return `cd: ${arg} is a file`;
 
   return `cd: no such file or directory: ${arg}`;
 };
@@ -173,13 +172,16 @@ const handleTree: CommandHandler = (_, ctx) => {
     if (!node.children) return "";
 
     const entries = Object.values(node.children);
-    return entries.map((child, i) => {
-      const isLast = i === entries.length - 1;
-      const line = `${prefix}${isLast ? "└── " : "├── "}${child.name}${child.type === "dir" ? "/" : ""}`;
-      const newPrefix = prefix + (isLast ? "    " : "│   ");
-      const childrenTree = child.type === "dir" ? buildTree(child, newPrefix) : "";
-      return line + (childrenTree ? "\n" + childrenTree : "");
-    }).join("\n");
+    return entries
+      .map((child, i) => {
+        const isLast = i === entries.length - 1;
+        const line = `${prefix}${isLast ? "└── " : "├── "}${child.name}${child.type === "dir" ? "/" : ""}`;
+        const newPrefix = prefix + (isLast ? "    " : "│   ");
+        const childrenTree =
+          child.type === "dir" ? buildTree(child, newPrefix) : "";
+        return line + (childrenTree ? "\n" + childrenTree : "");
+      })
+      .join("\n");
   };
 
   return normalize(buildTree(getNodeAtPath(ctx.root, ctx.currentPath)));
@@ -194,7 +196,7 @@ const handleExit: CommandHandler = (_, ctx) => {
 
 const handleGrep: CommandHandler = async ([pattern, filename], ctx) => {
   if (!pattern || !filename) return "usage: grep <pattern> <file>";
-  
+
   const { node } = resolvePath(ctx.root, ctx.currentPath, filename);
   if (!node) return `grep: ${filename}: No such file or directory`;
   if (node.type === "dir") return `grep: ${filename}: Is a directory`;
@@ -210,16 +212,19 @@ const handleGrep: CommandHandler = async ([pattern, filename], ctx) => {
       return `${C.Yellow}${num}${C.Reset}: ${highlightedLine}`;
     });
 
-  return matches.length > 0 ? normalize(matches.join("\n")) : `No matches found for '${pattern}'`;
+  return matches.length > 0
+    ? normalize(matches.join("\n"))
+    : `No matches found for '${pattern}'`;
 };
 
 const handleTouch: CommandHandler = ([filename], ctx) => {
   if (!filename) return "usage: touch <filename>";
-  if (filename.includes("/")) return "touch: cannot create file with path separators";
+  if (filename.includes("/"))
+    return "touch: cannot create file with path separators";
 
   const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
   if (!currentNode.children) return "touch: cannot create file here";
-  
+
   if (currentNode.children[filename]) {
     return `touch: '${filename}' already exists`;
   }
@@ -238,11 +243,12 @@ const handleTouch: CommandHandler = ([filename], ctx) => {
 
 const handleMkdir: CommandHandler = ([dirname], ctx) => {
   if (!dirname) return "usage: mkdir <directory>";
-  if (dirname.includes("/")) return "mkdir: cannot create directory with path separators";
+  if (dirname.includes("/"))
+    return "mkdir: cannot create directory with path separators";
 
   const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
   if (!currentNode.children) return "mkdir: cannot create directory here";
-  
+
   if (currentNode.children[dirname]) {
     return `mkdir: cannot create directory '${dirname}': File exists`;
   }
@@ -282,7 +288,7 @@ const handleJs: CommandHandler = (args) => {
 
 const handleRm: CommandHandler = ([target], ctx) => {
   if (!target) return "usage: rm <file|directory>";
-  
+
   const currentNode = getNodeAtPath(ctx.root, ctx.currentPath);
   if (currentNode.children && currentNode.children[target]) {
     delete currentNode.children[target];

@@ -72,13 +72,13 @@ const MessengerApp = () => {
     if (step === "category") {
       setFormData((prev) => ({ ...prev, category: text }));
       botReply(
-        `Got it. Would you like to provide any further details?`,
+        `Got it! Please provide any additional details.`,
         "details",
       );
     } else if (step === "details") {
       setFormData((prev) => ({ ...prev, message: text }));
       botReply(
-        "Sounds exciting! Finally, what is your name and contact information so I can get back to you?",
+        "Sounds exciting! Finally, please provide your name and contact info so I can get back to you.",
         "contact",
       );
     } else if (step === "contact") {

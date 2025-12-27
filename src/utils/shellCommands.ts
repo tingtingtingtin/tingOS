@@ -79,6 +79,7 @@ const handleCd: CommandHandler = ([arg], ctx) => {
     ctx.setPath(newPath);
     return "";
   }
+  else if (node) return `cd: ${arg} is a file`;
 
   return `cd: no such file or directory: ${arg}`;
 };
@@ -88,7 +89,7 @@ const handleCat: CommandHandler = async ([arg], ctx) => {
   const { node } = resolvePath(ctx.root, ctx.currentPath, arg);
 
   if (!node) return `cat: ${arg}: No such file or directory`;
-  if (node.type === "dir") return `cat: ${arg}: Is a directory`;
+  if (node.type === "dir") return `cat: ${arg} is a directory`;
 
   const content = await getFileContent(node);
   return highlightCode(content, node.name);
@@ -117,6 +118,8 @@ const handleCowsay: CommandHandler = (args) => {
   const message = args.length > 0 ? args.join(" ") : "Moo!";
   return cowsay(message);
 };
+
+const handleClear: CommandHandler = () => "\x1b[2J\x1b[3J\x1b[H";
 
 const handleWhoami: CommandHandler = () =>
   normalize(`${C.Yellow}
@@ -161,6 +164,31 @@ const handleOpen: CommandHandler = ([arg], ctx) => {
   return `open: app not found: ${arg}. Available apps: ${Object.keys(appMap).join(", ")}`;
 };
 
+const handleEcho: CommandHandler = (args) => args.join(" ");
+
+const handleDate: CommandHandler = () => new Date().toLocaleString();
+
+const handleTree: CommandHandler = (_, ctx) => {
+  const buildTree = (node: FileNode, prefix = ""): string => {
+    if (!node.children) return "";
+
+    const entries = Object.values(node.children);
+    return entries.map((child, i) => {
+      const isLast = i === entries.length - 1;
+      const line = `${prefix}${isLast ? "└── " : "├── "}${child.name}${child.type === "dir" ? "/" : ""}`;
+      const newPrefix = prefix + (isLast ? "    " : "│   ");
+      const childrenTree = child.type === "dir" ? buildTree(child, newPrefix) : "";
+      return line + (childrenTree ? "\n" + childrenTree : "");
+    }).join("\n");
+  };
+
+  return normalize(buildTree(getNodeAtPath(ctx.root, ctx.currentPath)));
+};
+
+// TODO: grep
+// TODO: exit
+// TODO: touch/mkdir
+
 const handleHelp: CommandHandler = () =>
   normalize(`
 Available commands:
@@ -168,9 +196,10 @@ Available commands:
   ${C.Bright}cd${C.Reset}      Change directory
   ${C.Bright}cat${C.Reset}     Print file content
   ${C.Bright}pwd${C.Reset}     Print working directory
-  ${C.Bright}theme${C.Reset}   [dark|light] Change website theme
   ${C.Bright}open${C.Reset}    [projects|contact|resume] Open app
+  ${C.Bright}theme${C.Reset}   [dark|light] Change website theme
   ${C.Bright}whoami${C.Reset}  Display user info
+  ${C.Bright}clear${C.Reset}   Clear screen
 `);
 
 export const commandHandlers: Record<string, CommandHandler> = {
@@ -178,11 +207,16 @@ export const commandHandlers: Record<string, CommandHandler> = {
   cd: handleCd,
   cat: handleCat,
   pwd: handlePwd,
-  cowsay: handleCowsay,
+  clear: handleClear,
   whoami: handleWhoami,
-  sudo: handleSudo,
   theme: handleTheme,
   open: handleOpen,
   help: handleHelp,
+  // Easter egg commands (Hi there!)
+  cowsay: handleCowsay,
+  sudo: handleSudo,
+  echo: handleEcho,
+  date: handleDate,
+  tree: handleTree,
   "": () => "", // handles blank enter
 };

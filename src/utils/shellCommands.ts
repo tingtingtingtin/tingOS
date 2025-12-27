@@ -21,6 +21,7 @@ export type CommandContext = {
   currentPath: string[];
   setPath: PathSetter;
   router: { push: (path: string) => void };
+  history: string[];
 };
 
 export type CommandHandler = (
@@ -297,19 +298,37 @@ const handleRm: CommandHandler = ([target], ctx) => {
   return `rm: cannot remove '${target}': No such file or directory`;
 };
 
+const handleHistory: CommandHandler = (_, ctx) => {
+  return normalize(
+    ctx.history
+      .map((cmd, i) => ` ${(i + 1).toString().padStart(3, " ")}  ${cmd}`)
+      .join("\n"),
+  );
+};
+
 const handleHelp: CommandHandler = () =>
   normalize(`
-Available commands:
-  ${C.Bright}ls${C.Reset}        List directory contents
-  ${C.Bright}cd${C.Reset}        Change directory
-  ${C.Bright}cat${C.Reset}       Print file content
-  ${C.Bright}pwd${C.Reset}       Print working directory
-  ${C.Bright}grep${C.Reset}      Search for pattern in file
-  ${C.Bright}clear${C.Reset}     Clear screen
-  ${C.Bright}open${C.Reset}      Open app (projects|contact|resume|about|experience)
-  ${C.Bright}theme${C.Reset}     Change theme (dark|light)
-  ${C.Bright}whoami${C.Reset}    Display user info
-  ${C.Bright}exit${C.Reset}      Close terminal
+${C.Bright}TingOS Terminal, version 1.1.0-release${C.Reset}
+Type 'help' to see this list.
+
+${C.Cyan}Navigation & Files${C.Reset}
+  ${C.Bright}ls${C.Reset}      List directory contents
+  ${C.Bright}cd${C.Reset}      Change directory
+  ${C.Bright}pwd${C.Reset}     Print working directory
+  ${C.Bright}tree${C.Reset}    Visual directory structure
+  ${C.Bright}cat${C.Reset}     Print file content
+  ${C.Bright}grep${C.Reset}    Search for pattern in file
+
+${C.Cyan}System & Portfolio${C.Reset}
+  ${C.Bright}whoami${C.Reset}  Display developer info
+  ${C.Bright}open${C.Reset}    Open apps (projects, resume, etc.)
+  ${C.Bright}theme${C.Reset}   Change theme (dark, light)
+  ${C.Bright}history${C.Reset} Show command history
+  ${C.Bright}date${C.Reset}    Display current time
+  ${C.Bright}clear${C.Reset}   Clear the screen
+  ${C.Bright}exit${C.Reset}    Close terminal session
+
+${C.Yellow}Hint: Try js 2 + 2 for fun! ${C.Reset}
 `);
 
 export const commandHandlers: Record<string, CommandHandler> = {
@@ -324,6 +343,7 @@ export const commandHandlers: Record<string, CommandHandler> = {
   theme: handleTheme,
   open: handleOpen,
   help: handleHelp,
+  history: handleHistory,
   // Easter egg commands (Hi there!)
   js: handleJs,
   cowsay: handleCowsay,

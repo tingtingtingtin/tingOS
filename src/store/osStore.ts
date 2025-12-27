@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface OSState {
   runningApps: string[];
@@ -11,27 +12,39 @@ interface OSState {
   toggleDarkMode: () => void;
 }
 
-export const useOSStore = create<OSState>((set, get) => ({
-  runningApps: [],
+export const useOSStore = create<OSState>()(
+  persist(
+    (set, get) => ({
+      runningApps: [], // reset on refresh
 
-  launchApp: (id) => {
-    if (!get().runningApps.includes(id)) {
-      set((state) => ({ runningApps: [...state.runningApps, id] }));
-    }
-    console.log("App launched");
-  },
+      launchApp: (id) => {
+        if (!get().runningApps.includes(id)) {
+          set((state) => ({ runningApps: [...state.runningApps, id] }));
+        }
+      },
 
-  closeApp: (id) => {
-    set((state) => ({
-      runningApps: state.runningApps.filter((appId) => appId !== id),
-    }));
-  },
+      closeApp: (id) => {
+        set((state) => ({
+          runningApps: state.runningApps.filter((appId) => appId !== id),
+        }));
+      },
 
-  isAppRunning: (id) => get().runningApps.includes(id),
+      isAppRunning: (id) => get().runningApps.includes(id),
 
-  reducedMotion: false,
-  toggleMotion: () => set((state) => ({ reducedMotion: !state.reducedMotion })),
+      reducedMotion: false,
+      toggleMotion: () =>
+        set((state) => ({ reducedMotion: !state.reducedMotion })),
 
-  darkMode: true, // default to dark
-  toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-}));
+      darkMode: true,
+      toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+    }),
+    {
+      name: "ting-os-settings",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        darkMode: state.darkMode,
+        reducedMotion: state.reducedMotion,
+      }),
+    },
+  ),
+);

@@ -49,6 +49,18 @@ const Terminal = ({
   }, [currentPath]);
 
   useEffect(() => {
+    const savedHistory = sessionStorage.getItem("terminal_history");
+    if (savedHistory) {
+      try {
+        history.current = JSON.parse(savedHistory);
+      } catch (e) {
+        history.current = [];
+        console.log("! History not found: ", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (!terminalRef.current || xtermRef.current) return;
 
     const term = new XTerm({
@@ -180,16 +192,23 @@ const Terminal = ({
       if (charCode === 13) {
         // Enter
         term.write("\r\n");
-        const cmd = inputBuffer.current;
-        if (cmd.trim() && fsRef.current) {
-          history.current.push(cmd.trim());
+        const cmd = inputBuffer.current.trim();
+        if (cmd && fsRef.current) {
+          if (history.current[history.current.length - 1] !== cmd) {
+            history.current.push(cmd);
+            sessionStorage.setItem(
+              "terminal_history",
+              JSON.stringify(history.current),
+            );
+          }
           historyIndex.current = -1;
           const output = await processCommand(
-            cmd.trim(),
+            cmd,
             fsRef.current!,
             pathRef.current,
             (p) => setCurrentPath(p),
             router,
+            history.current,
           );
           if (output) term.writeln(output);
         }

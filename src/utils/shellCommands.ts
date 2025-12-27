@@ -22,6 +22,7 @@ export type CommandContext = {
   setPath: PathSetter;
   router: { push: (path: string) => void };
   history: string[];
+  clearHistory: () => void;
 };
 
 export type CommandHandler = (
@@ -298,12 +299,52 @@ const handleRm: CommandHandler = ([target], ctx) => {
   return `rm: cannot remove '${target}': No such file or directory`;
 };
 
-const handleHistory: CommandHandler = (_, ctx) => {
+const handleHistory: CommandHandler = ([flag], ctx) => {
+  if (flag === "-c" || flag === "clear") {
+    ctx.clearHistory();
+    return "History cleared";
+  } else if (flag) {
+    return `${C.Red}history: incorrect usage of flag '${flag}'; try 'history -c'${C.Reset}`;
+  }
   return normalize(
     ctx.history
       .map((cmd, i) => ` ${(i + 1).toString().padStart(3, " ")}  ${cmd}`)
       .join("\n"),
   );
+};
+
+const handleMeowfetch: CommandHandler = () => {
+  const cat = [
+    "      |\\__/,|   (`\\",
+    "    _.|o o  |_   ) )",
+    "---(((---(((---------",
+  ];
+
+  const info = [
+    `${C.Magenta}${C.Bright}ting@tingOS${C.Reset}`,
+    `-----------`,
+    `${C.Cyan}OS${C.Reset}: TingOS v1.1.0 (Next.js/React)`,
+    `${C.Cyan}Kernel${C.Reset}: 2025.12.22-flash`,
+    `${C.Cyan}Uptime${C.Reset}: 1 MS (Student)`,
+    `${C.Cyan}Shell${C.Reset}: ting-sh 1.0`,
+    `${C.Cyan}Resolution${C.Reset}: ${window.screen.width}x${window.screen.height}`,
+    `${C.Cyan}Terminal${C.Reset}: xterm.js`,
+    `${C.Cyan}CPU${C.Reset}: Brain (i9-powered)`,
+    `${C.Cyan}Memory${C.Reset}: 16GB RAM / 1TB Dreams`,
+    ``,
+    `${C.Red}● ${C.Green}● ${C.Yellow}● ${C.Blue}● ${C.Magenta}● ${C.Cyan}●`,
+  ];
+
+  const maxLength = Math.max(cat.length, info.length);
+  let output = "\n";
+
+  for (let i = 0; i < maxLength; i++) {
+    const catPart = (cat[i] || "").padEnd(25, " ");
+    const infoPart = info[i] || "";
+    output += `${catPart}${infoPart}\n`;
+  }
+
+  return normalize(output);
 };
 
 const handleHelp: CommandHandler = () =>
@@ -312,21 +353,22 @@ ${C.Bright}TingOS Terminal, version 1.1.0-release${C.Reset}
 Type 'help' to see this list.
 
 ${C.Cyan}Navigation & Files${C.Reset}
-  ${C.Bright}ls${C.Reset}      List directory contents
-  ${C.Bright}cd${C.Reset}      Change directory
-  ${C.Bright}pwd${C.Reset}     Print working directory
-  ${C.Bright}tree${C.Reset}    Visual directory structure
-  ${C.Bright}cat${C.Reset}     Print file content
-  ${C.Bright}grep${C.Reset}    Search for pattern in file
+  ${C.Bright}ls${C.Reset}         List directory contents
+  ${C.Bright}cd${C.Reset}         Change directory
+  ${C.Bright}pwd${C.Reset}        Print working directory
+  ${C.Bright}tree${C.Reset}       Visual directory structure
+  ${C.Bright}cat${C.Reset}        Print file content
+  ${C.Bright}grep${C.Reset}       Search for pattern in file
 
 ${C.Cyan}System & Portfolio${C.Reset}
-  ${C.Bright}whoami${C.Reset}  Display developer info
-  ${C.Bright}open${C.Reset}    Open apps (projects, resume, etc.)
-  ${C.Bright}theme${C.Reset}   Change theme (dark, light)
-  ${C.Bright}history${C.Reset} Show command history
-  ${C.Bright}date${C.Reset}    Display current time
-  ${C.Bright}clear${C.Reset}   Clear the screen
-  ${C.Bright}exit${C.Reset}    Close terminal session
+  ${C.Bright}whoami${C.Reset}     Display developer info
+  ${C.Bright}meowfetch${C.Reset}  Display system info
+  ${C.Bright}open${C.Reset}       Open apps (projects, resume, etc.)
+  ${C.Bright}theme${C.Reset}      Change theme (dark, light)
+  ${C.Bright}history${C.Reset}    Show command history (flag -c to clear)
+  ${C.Bright}date${C.Reset}       Display current time
+  ${C.Bright}clear${C.Reset}      Clear the screen
+  ${C.Bright}exit${C.Reset}       Close terminal session
 
 ${C.Yellow}Hint: Try js 2 + 2 for fun! ${C.Reset}
 `);
@@ -344,7 +386,9 @@ export const commandHandlers: Record<string, CommandHandler> = {
   open: handleOpen,
   help: handleHelp,
   history: handleHistory,
+  meowfetch: handleMeowfetch,
   // Easter egg commands (Hi there!)
+  neofetch: handleMeowfetch,
   js: handleJs,
   cowsay: handleCowsay,
   sudo: handleSudo,

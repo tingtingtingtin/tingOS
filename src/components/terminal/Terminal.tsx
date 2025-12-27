@@ -60,6 +60,11 @@ const Terminal = ({
     }
   }, []);
 
+  const clearHistory = () => {
+    history.current = [];
+    sessionStorage.removeItem("terminal_history");
+  };
+
   useEffect(() => {
     if (!terminalRef.current || xtermRef.current) return;
 
@@ -192,7 +197,34 @@ const Terminal = ({
       if (charCode === 13) {
         // Enter
         term.write("\r\n");
-        const cmd = inputBuffer.current.trim();
+        let cmd = inputBuffer.current.trim();
+
+        if (cmd === "!!") {
+          // last command
+          if (history.current.length > 0) {
+            cmd = history.current[history.current.length - 1];
+            term.writeln(cmd);
+          } else {
+            term.writeln("history: no commands found");
+            inputBuffer.current = "";
+            term.write(formatPrompt(pathRef.current));
+            return;
+          }
+        } else if (cmd.match(/^!(\d+)$/)) {
+          // last n-th command
+          const match = cmd.match(/^!(\d+)$/);
+          const index = parseInt(match![1]) - 1;
+          if (history.current[index]) {
+            cmd = history.current[index];
+            term.writeln(cmd);
+          } else {
+            term.writeln(`history: event not found: ${match![1]}`);
+            inputBuffer.current = "";
+            term.write(formatPrompt(pathRef.current));
+            return;
+          }
+        }
+
         if (cmd && fsRef.current) {
           if (history.current[history.current.length - 1] !== cmd) {
             history.current.push(cmd);
@@ -209,6 +241,7 @@ const Terminal = ({
             (p) => setCurrentPath(p),
             router,
             history.current,
+            clearHistory,
           );
           if (output) term.writeln(output);
         }

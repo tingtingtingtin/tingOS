@@ -23,16 +23,16 @@ export function ControlButtons({
         {/* Button 1: GitHub */}
         {hasGithub && (
           <div
-            className="flex flex-col items-center gap-2 group cursor-pointer"
+            className="flex flex-col items-center gap-2 group cursor-pointer relative"
             onClick={() =>
               activeGameData.githubUrl &&
               window.open(activeGameData.githubUrl, "_blank")
             }
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+            <div className="flex h-12 w-12 mb-8 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
               <Github size={24} />
             </div>
-            <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-1 whitespace-nowrap text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
               Source
             </span>
           </div>
@@ -40,7 +40,7 @@ export function ControlButtons({
 
         {/* Center: Play Indicator */}
         <div
-          className={`flex flex-col items-center gap-2 group ${hasEmbed ? "cursor-pointer" : "cursor-not-allowed mr-4"}`}
+          className={`flex flex-col items-center gap-2 mb-2 group ${hasEmbed ? "cursor-pointer" : "cursor-not-allowed"}`}
           onClick={() => hasEmbed && onSelect()}
         >
           <div className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${hasEmbed ? "group-hover:scale-110 group-active:scale-95" : "opacity-50"} dark:bg-[#3d3d3d]`}>
@@ -54,15 +54,15 @@ export function ControlButtons({
         {/* Button 3: External Link */}
         {hasExternal && (
           <div
-            className="flex flex-col items-center gap-2 group cursor-pointer"
+            className="flex flex-col items-center gap-2 group cursor-pointer relative"
             onClick={() =>
               activeGameData.extUrl && window.open(activeGameData.extUrl, "_blank")
             }
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
+            <div className="flex h-12 w-12 mb-8 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm transition-transform group-hover:scale-110 group-active:scale-95 dark:bg-[#3d3d3d] dark:text-gray-300">
               <Globe size={24} />
             </div>
-            <span className="text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-1 whitespace-nowrap text-xs font-bold tracking-tight text-[#00C3E3] opacity-0 transition-opacity group-hover:opacity-100">
               External Link
             </span>
           </div>

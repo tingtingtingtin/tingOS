@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import type { Game } from "@/data/games";
 
-const CARD_SIZE = 260;
+const CARD_SIZE = 268;
 const CARD_GAP = 24;
 const VISIBLE_RANGE = 3;
 
@@ -78,7 +78,13 @@ export function GameCarousel({
                   damping: 30,
                   mass: 1,
                 }}
-                className="absolute left-[calc(50%-145px)] top-4 h-67 w-67"
+                className="absolute top-4"
+                style={{
+                  width: CARD_SIZE,
+                  height: CARD_SIZE, // Making it square based on your variable
+                  left: "50%",
+                  marginLeft: -(CARD_SIZE / 2), // This perfectly anchors the "0" point to the center
+                }}
               >
                 <div
                   onClick={() =>

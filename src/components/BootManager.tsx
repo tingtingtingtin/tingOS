@@ -23,7 +23,7 @@ const LOADING_MESSAGES = [
 ];
 
 export default function BootManager() {
-  const [view, setView] = useState<"lock" | "login" | "booted">("lock");
+  const [view, setView] = useState<"lock" | "login" | "booted" | "init">("init");
   const [time, setTime] = useState<Date | null>(null);
 
   // Auth States
@@ -39,6 +39,8 @@ export default function BootManager() {
     if (sessionStorage.getItem("tingOS_unlocked")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setView("booted");
+    } else {
+      setView("lock");
     }
 
     setTime(new Date());
@@ -121,7 +123,7 @@ export default function BootManager() {
     }
   };
 
-  if (view === "booted") return null;
+  if (view === "init" || view === "booted") return null;
 
   return (
     <AnimatePresence>

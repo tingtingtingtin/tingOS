@@ -86,7 +86,7 @@ const ControlButtons = ({
       </div>
 
       {/* --- CONTROLS FOOTER --- */}
-      <div className="z-20 mt-auto mb-2 hidden w-full items-center justify-between border-t border-gray-300 bg-[#EBEBEB] px-8 py-3 text-xs font-bold text-gray-500 md:flex dark:border-gray-700 dark:bg-[#2D2D2D] dark:text-gray-400">
+      <div className="z-20 mt-auto mb-2 hidden w-full items-center justify-between border-t border-gray-400 px-8 py-3 text-xs font-bold text-gray-900 md:flex dark:border-gray-700 dark:text-gray-300">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="flex gap-1">

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { games } from "@/data/games";
 import GameModal from "./GameModal";
 import GameCarousel from "./GameCarousel";
 import ControlButtons from "./ControlButtons";
+import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 
 const GamesConsole = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,6 +41,12 @@ const GamesConsole = () => {
     const interval = setInterval(tick, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  const currentGame = useMemo(() => {
+    const len = games.length;
+    const wrappedIndex = ((activeIndex % len) + len) % len;
+    return games[wrappedIndex];
+  }, [activeIndex]);
 
   const tickAudio = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
@@ -107,6 +115,36 @@ const GamesConsole = () => {
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentGame.title} // Uses memoized game
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            {currentGame.thumbnail ? (
+              <Image
+                src={currentGame.thumbnail}
+                alt=""
+                fill
+                className="object-cover scale-110 blur-[60px] opacity-40"
+                priority
+              />
+            ) : (
+              <div 
+                className="h-full w-full opacity-30"
+                style={{ backgroundColor: currentGame.color || "#94a3b8" }} 
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
+        {/* Slightly more performant overlay */}
+        <div className="absolute inset-0 bg-white/10 dark:bg-black/40 backdrop-blur-2xl" />
+      </div>
+      
       <GameCarousel
         activeIndex={activeIndex}
         games={games}

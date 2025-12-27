@@ -8,7 +8,7 @@ interface TitleAreaProps {
 
 const TitleArea = ({title, description, isUnsupported}: TitleAreaProps) => {
   return (
-    <div className="z-20 mb-2 md:mb-8 flex flex-col md:pt-4 text-left md:ml-[15%] md:items-start">
+    <div className="relative z-20 mb-2 md:mb-8 flex flex-col md:pt-4 text-left md:ml-[15%] md:items-start">
         <div className="flex gap-4 md:justify-start md:mx-0 mx-auto">
           <div className="h-6 w-1 rounded-full bg-[#00C3E3] md:ml-0 hidden md:block" />
           <h2 className="text-xl font-medium text-[#00C3E3] md:text-2xl">

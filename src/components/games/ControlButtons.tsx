@@ -19,7 +19,7 @@ export function ControlButtons({
   return (
     <>
       {/* --- BOTTOM ROW (System Buttons) --- */}
-      <div className="relative z-30 mb-3 flex items-center justify-center gap-8">
+      <div className="relative z-30 md:mb-4 mb-20 flex items-center justify-center gap-8">
         {/* Button 1: GitHub */}
         {hasGithub && (
           <div

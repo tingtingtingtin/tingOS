@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { Wifi, BatteryMedium } from "lucide-react";
 import type { Game } from "@/data/games";
 
 const CARD_SIZE = 268;
@@ -14,6 +15,7 @@ interface GameCarouselProps {
   games: Game[];
   onNavigate: (direction: number) => void;
   onSelect: () => void;
+  time: string;
 }
 
 export function GameCarousel({
@@ -21,11 +23,15 @@ export function GameCarousel({
   games,
   onNavigate,
   onSelect,
+  time,
 }: GameCarouselProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [showProgress, setShowProgress] = useState(true);
+  const prevIndexRef = useRef(activeIndex);
   const touchStartX = useRef<number | null>(null);
   const mouseDownX = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
+  const hideProgressTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const updateIsMobile = () => setIsMobile(window.innerWidth < 768);
@@ -33,6 +39,15 @@ export function GameCarousel({
     window.addEventListener("resize", updateIsMobile);
     return () => window.removeEventListener("resize", updateIsMobile);
   }, []);
+
+  useEffect(() => {
+    setShowProgress(true);
+    if (hideProgressTimer.current) clearTimeout(hideProgressTimer.current);
+    hideProgressTimer.current = setTimeout(() => setShowProgress(false), 2000);
+    return () => {
+      if (hideProgressTimer.current) clearTimeout(hideProgressTimer.current);
+    };
+  }, [activeIndex]);
 
   const visibleRange = isMobile ? 0 : DESKTOP_VISIBLE_RANGE;
 
@@ -52,15 +67,59 @@ export function GameCarousel({
 
   return (
     <>
+      {/* System Info Header */}
+      <div className="grid grid-cols-3 w-full items-center px-8 pt-6 opacity-80">
+        {/* User Icon (Top Left) */}
+        <div className="flex justify-start items-center gap-4">
+          <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-400/30 bg-gray-300 dark:bg-gray-700">
+            <Image src="/profile.jpg" alt="User" width={40} height={40} className="h-full w-full object-cover" />
+          </div>
+        </div>
+
+        {/* Progress Bar - Centered */}
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: showProgress ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center justify-center gap-2 px-4"
+          >
+            {games.map((_, i) => {
+              // Determine the actual active game index (wrapped)
+              const currentWrappedIndex = ((activeIndex % games.length) + games.length) % games.length;
+              const isActive = i === currentWrappedIndex;
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={false}
+                  animate={{
+                    scale: isActive ? 1.2 : 1,
+                    backgroundColor: isActive ? "#00C3E3" : "rgba(156, 163, 175, 0.5)", // gray-400/50
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="h-1.5 w-1.5 rounded-full"
+                />
+              );
+            })}
+          </motion.div>
+
+        {/* System Status */}
+        <div className="flex items-center gap-4 text-sm font-medium justify-end">
+          <span>{time}</span>
+          <Wifi size={18} />
+          <BatteryMedium size={20} />
+        </div>
+      </div>
+
       {/* Title Area */}
-      <div className="flex flex-col mb-8 z-20 text-left md:ml-[15%] md:text-left items-center md:items-start">
+      <div className="flex flex-col mb-8 z-20 text-left md:ml-[15%] md:text-left items-center md:items-start pt-4">
         <div className="flex items-center gap-4 justify-center md:justify-start">
           <div className="h-6 w-1 bg-[#00C3E3] rounded-full" />
           <h2 className="text-xl md:text-2xl font-medium text-[#00C3E3]">
             {activeGameData.title}
           </h2>
         </div>
-        <p className="ml-3 mt-1 text-xs font-bold text-gray-400 uppercase tracking-widest text-center md:text-left">
+        <p className="ml-3 mt-1 w-2/3 text-xs font-bold text-gray-400 uppercase tracking-widest text-center md:text-left min-h-12">
           {activeDescription}
         </p>
       </div>

@@ -66,10 +66,6 @@ const GamesConsole = () => {
     audio.play().catch(() => {});
   };
 
-  useEffect(() => {
-    playSound("select");
-  }, []);
-
   // --- NAVIGATION ---
   const handleNavigate = useCallback(
     (dir: number) => {

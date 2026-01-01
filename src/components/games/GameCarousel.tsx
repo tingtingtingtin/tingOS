@@ -53,8 +53,8 @@ const GameCarousel = ({
 
   const handleSelect = () => {
     setIsLaunching(true);
+    onSelect();
     setTimeout(() => {
-      onSelect();
       setIsLaunching(false);
     }, 400);
   };
@@ -186,7 +186,7 @@ const GameCarousel = ({
                 initial={{ x: offset * (CARD_SIZE + CARD_GAP), scale: 0.8 }}
                 animate={{
                   x: offset * (CARD_SIZE + CARD_GAP),
-                  scale: isCenter ? (isLaunching ? 1.1 : 1.0) : 0.85,
+                  scale: isCenter ? 1.0 : 0.85,
                   opacity: Math.abs(offset) > visibleRange ? 0 : 1,
                   zIndex: isCenter ? 20 : 10 - Math.abs(offset),
                   rotateY: offset * 10,
@@ -197,7 +197,7 @@ const GameCarousel = ({
                   damping: 30,
                   mass: 1,
                 }}
-                className={`absolute top-4 ${isLaunching && isCenter ? "z-50" : ""}`}
+                className={`absolute top-4`}
                 style={{
                   width: CARD_SIZE,
                   height: CARD_SIZE,
@@ -211,7 +211,7 @@ const GameCarousel = ({
                       ? handleSelect()
                       : onNavigate(offset)
                   }
-                  className={`group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"} ${isLaunching && isCenter ? "ring-12 ring-white/50 duration-150" : ""} `}
+                  className={`group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"} ${isLaunching && isCenter ? "ring-12 ring-white/50 duration-150 ease-in-out transition-all" : ""} `}
                 >
                   {/* Card */}
                   <div

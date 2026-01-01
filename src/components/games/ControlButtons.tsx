@@ -41,7 +41,7 @@ const ControlButtons = ({
           </div>
         )}
 
-       {/* Center: Play Indicator */}
+        {/* Center: Play Indicator */}
         <div
           className={`group relative flex flex-col items-center ${
             hasEmbed && !isUnsupported ? "cursor-pointer" : "cursor-not-allowed"
@@ -49,7 +49,7 @@ const ControlButtons = ({
           onClick={() => hasEmbed && !isUnsupported && onSelect()}
         >
           <div
-            className={`flex h-14 w-14 items-center mb-8 justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${
+            className={`mb-8 flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#00C3E3]/30 bg-white text-[#00C3E3] shadow-lg transition-transform ${
               hasEmbed && !isUnsupported
                 ? "group-hover:scale-110 group-active:scale-95"
                 : "opacity-50"

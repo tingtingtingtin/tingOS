@@ -115,7 +115,7 @@ const GamesConsole = () => {
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={currentGame.title} // Uses memoized game
@@ -130,21 +130,21 @@ const GamesConsole = () => {
                 src={currentGame.thumbnail}
                 alt=""
                 fill
-                className="object-cover scale-110 blur-[60px] opacity-40"
+                className="scale-110 object-cover opacity-40 blur-[60px]"
                 priority
               />
             ) : (
-              <div 
+              <div
                 className="h-full w-full opacity-30"
-                style={{ backgroundColor: currentGame.color || "#94a3b8" }} 
+                style={{ backgroundColor: currentGame.color || "#94a3b8" }}
               />
             )}
           </motion.div>
         </AnimatePresence>
         {/* Slightly more performant overlay */}
-        <div className="absolute inset-0 bg-white/10 dark:bg-black/40 backdrop-blur-2xl" />
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-2xl dark:bg-black/40" />
       </div>
-      
+
       <GameCarousel
         activeIndex={activeIndex}
         games={games}

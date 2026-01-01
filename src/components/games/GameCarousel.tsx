@@ -72,12 +72,12 @@ const GameCarousel = ({
 
   const activeGameData = getGame(activeIndex);
   const activeDescription = activeGameData.description ?? "";
-  const isUnsupported = isMobile && activeGameData.desktopOnly || false;
+  const isUnsupported = (isMobile && activeGameData.desktopOnly) || false;
 
   return (
     <>
       {/* System Info Header */}
-      <div className="grid w-full grid-cols-3 items-center px-8 md:pt-6 pt-4 opacity-80">
+      <div className="grid w-full grid-cols-3 items-center px-8 pt-4 opacity-80 md:pt-6">
         {/* User Icon (Top Left) */}
         <div className="flex items-center justify-start gap-4">
           <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-400/30 bg-gray-300 dark:bg-gray-700">
@@ -130,7 +130,11 @@ const GameCarousel = ({
 
       {/* Title Area (Desktop) */}
       <div className="hidden md:block">
-        <TitleArea title={activeGameData.title} description={activeDescription} isUnsupported={isUnsupported} />
+        <TitleArea
+          title={activeGameData.title}
+          description={activeDescription}
+          isUnsupported={isUnsupported}
+        />
       </div>
 
       {/* Carousel Track */}
@@ -244,24 +248,27 @@ const GameCarousel = ({
           <div className="absolute inset-0 flex items-center justify-between px-0 md:hidden">
             <button
               aria-label="Previous game"
-              className="flex h-15 w-15 items-center justify-center  text-gray-700 shadow dark:text-white"
+              className="flex h-15 w-15 items-center justify-center text-gray-700 shadow dark:text-white"
               onClick={() => onNavigate(-1)}
             >
-              <ChevronLeft size={30}/>
+              <ChevronLeft size={30} />
             </button>
             <button
               aria-label="Next game"
-              className="flex h-15 w-15 items-center justify-center  text-gray-700 shadow dark:text-white"
+              className="flex h-15 w-15 items-center justify-center text-gray-700 shadow dark:text-white"
               onClick={() => onNavigate(1)}
             >
-              <ChevronRight size={30}/>
+              <ChevronRight size={30} />
             </button>
           </div>
         )}
-
       </div>
-      <div className="md:hidden block">
-        <TitleArea title={activeGameData.title} description={activeDescription} isUnsupported={isUnsupported} />
+      <div className="block md:hidden">
+        <TitleArea
+          title={activeGameData.title}
+          description={activeDescription}
+          isUnsupported={isUnsupported}
+        />
       </div>
     </>
   );

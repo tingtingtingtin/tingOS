@@ -1,5 +1,3 @@
-"use client";
-
 import WindowFrame from "@/components/WindowFrame";
 import { Download, ExternalLink } from "lucide-react";
 

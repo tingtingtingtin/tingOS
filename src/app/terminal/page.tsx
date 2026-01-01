@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 const Terminal = dynamic(() => import("@/components/terminal/Terminal"), {
   ssr: false,
   loading: () => (
-    <div className="mt-8 ml-4 flex h-full w-full font-mono text-green-500 bg-[#1a1b26]">
+    <div className="mt-8 ml-4 flex h-full w-full bg-[#1a1b26] font-mono text-green-500">
       $ Initializing terminal...
     </div>
   ),
@@ -25,7 +25,11 @@ export default function TerminalPage() {
   }, []);
 
   return (
-    <WindowFrame id="terminal" title="Terminal - Source Explorer">
+    <WindowFrame
+      id="terminal"
+      title="Terminal - Source Explorer"
+      skipInitialLoading
+    >
       <div className="h-full w-full bg-[#1a1b26] p-2">
         {fileSystem ? (
           <Terminal

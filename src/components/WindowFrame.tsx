@@ -11,24 +11,32 @@ interface WindowFrameProps {
   id: string;
   title: string;
   children: React.ReactNode;
+  skipInitialLoading?: boolean;
 }
 
-const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
+const WindowFrame = ({
+  id,
+  title,
+  children,
+  skipInitialLoading = false,
+}: WindowFrameProps) => {
   const router = useRouter();
   const { closeApp, reducedMotion } = useOSStore();
   const [isVisible, setIsVisible] = useState(true);
-  const [isContentReady, setIsContentReady] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(skipInitialLoading);
 
   const handleMinimize = () => {
     router.push("/");
   };
 
   useEffect(() => {
+    if (skipInitialLoading) return;
+
     const frame = requestAnimationFrame(() => {
       setIsContentReady(true);
     });
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [skipInitialLoading]);
 
   const handleClose = () => {
     setIsVisible(false);

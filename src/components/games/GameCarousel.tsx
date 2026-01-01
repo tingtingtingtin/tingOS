@@ -113,7 +113,7 @@ const GameCarousel = ({
                     ? "#00C3E3"
                     : "rgba(156, 163, 175, 0.5)", // gray-400/50
                 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                transition={{ type: "tween", stiffness: 300, damping: 30 }}
                 className="h-1.5 w-1.5 rounded-full"
               />
             );
@@ -183,7 +183,6 @@ const GameCarousel = ({
             return (
               <motion.div
                 key={index}
-                layout
                 initial={{ x: offset * (CARD_SIZE + CARD_GAP), scale: 0.8 }}
                 animate={{
                   x: offset * (CARD_SIZE + CARD_GAP),
@@ -227,8 +226,10 @@ const GameCarousel = ({
                       <Image
                         src={game.thumbnail as string}
                         alt={game.title}
-                        width={1000}
-                        height={1000}
+                        width={CARD_SIZE}
+                        height={CARD_SIZE}
+                        unoptimized
+                        loading={Math.abs(offset) <= 1 ? "eager" : "lazy"}
                         draggable={false}
                         className="h-full w-full object-cover"
                       />

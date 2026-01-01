@@ -128,10 +128,11 @@ const GamesConsole = () => {
             {currentGame.thumbnail ? (
               <Image
                 src={currentGame.thumbnail}
-                alt=""
+                alt={currentGame.title + " thumbnail"}
                 fill
-                className="scale-110 object-cover opacity-40 blur-[60px]"
-                priority
+                className="scale-110 object-cover opacity-40"
+                loading="lazy"
+                quality={50}
               />
             ) : (
               <div
@@ -141,7 +142,6 @@ const GamesConsole = () => {
             )}
           </motion.div>
         </AnimatePresence>
-        {/* Slightly more performant overlay */}
         <div className="absolute inset-0 bg-white/10 backdrop-blur-2xl dark:bg-black/40" />
       </div>
 

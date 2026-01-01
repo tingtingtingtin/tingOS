@@ -2,41 +2,24 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useOSStore } from "@/store/osStore";
 import Header from "./Header";
-import WindowLoading from "./WindowLoading";
 
 interface WindowFrameProps {
   id: string;
   title: string;
   children: React.ReactNode;
-  skipInitialLoading?: boolean;
 }
 
-const WindowFrame = ({
-  id,
-  title,
-  children,
-  skipInitialLoading = false,
-}: WindowFrameProps) => {
+const WindowFrame = ({ id, title, children }: WindowFrameProps) => {
   const router = useRouter();
   const { closeApp, reducedMotion } = useOSStore();
   const [isVisible, setIsVisible] = useState(true);
-  const [isContentReady, setIsContentReady] = useState(skipInitialLoading);
 
   const handleMinimize = () => {
     router.push("/");
   };
-
-  useEffect(() => {
-    if (skipInitialLoading) return;
-
-    const frame = requestAnimationFrame(() => {
-      setIsContentReady(true);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [skipInitialLoading]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -83,26 +66,7 @@ const WindowFrame = ({
 
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-950/50">
-              <AnimatePresence mode="wait">
-                {!isContentReady ? (
-                  <motion.div
-                    key="window-loader"
-                    exit={{ opacity: 0 }}
-                    className="h-full w-full"
-                  >
-                    <WindowLoading />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="window-content"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="h-full w-full"
-                  >
-                    {children}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {children}
             </div>
           </motion.div>
         )}

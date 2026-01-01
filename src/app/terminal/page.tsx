@@ -25,11 +25,7 @@ export default function TerminalPage() {
   }, []);
 
   return (
-    <WindowFrame
-      id="terminal"
-      title="Terminal - Source Explorer"
-      skipInitialLoading
-    >
+    <WindowFrame id="terminal" title="Terminal - Source Explorer">
       <div className="h-full w-full bg-[#1a1b26] p-2">
         {fileSystem ? (
           <Terminal

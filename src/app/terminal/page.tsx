@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import WindowFrame from "@/components/WindowFrame";
 import { initializeFileSystem, FileNode } from "@/utils/vfs";
 import { useRouter } from "next/navigation";
-import Terminal from "@/components/terminal/Terminal";
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("@/components/terminal/Terminal"), {
+  ssr: false,
+  loading: () => (
+    <div className="mt-8 ml-4 flex h-full w-full bg-[#1a1b26] font-mono text-green-500">
+      $ Initializing terminal...
+    </div>
+  ),
+});
 
 export default function TerminalPage() {
   const [currentPath, setCurrentPath] = useState<string[]>([]);

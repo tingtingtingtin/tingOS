@@ -49,11 +49,10 @@ const BootManager = () => {
       "/contact",
       "/resume",
       "/terminal",
+      "/games",
     ];
-    routes.forEach((route, index) => {
-      setTimeout(() => {
-        router.prefetch(route);
-      }, index * 100);
+    routes.forEach((route) => {
+      router.prefetch(route);
     });
   }, [router]);
 
@@ -61,7 +60,6 @@ const BootManager = () => {
     if (sessionStorage.getItem("tingOS_unlocked")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setView("booted");
-      prefetchEverything();
     } else {
       setView("lock");
     }

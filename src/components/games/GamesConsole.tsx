@@ -49,24 +49,26 @@ const GamesConsole = () => {
   }, [activeIndex]);
 
   const tickAudio = useRef<HTMLAudioElement | null>(null);
+  const selectAudio = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
     tickAudio.current = new Audio("/tick.wav");
     tickAudio.current.volume = 1;
+    selectAudio.current = new Audio("/select.mp3");
+    selectAudio.current.volume = 0.2;
   }, []);
 
-  // --- AUDIO ---
   const playSound = (type: "tick" | "select") => {
     if (type === "tick" && tickAudio.current) {
       tickAudio.current.currentTime = 0;
       tickAudio.current.play();
       return;
     }
-    const audio = new Audio("/select.mp3");
-    audio.volume = 0.2;
-    audio.play().catch(() => {});
+    if (selectAudio.current) {
+      selectAudio.current.currentTime = 0;
+      selectAudio.current.play().catch(() => {});
+    }
   };
 
-  // --- NAVIGATION ---
   const handleNavigate = useCallback(
     (dir: number) => {
       if (selectedGame) return;
@@ -78,15 +80,14 @@ const GamesConsole = () => {
 
   const handleSelect = useCallback(() => {
     if (selectedGame) return;
-    const len = games.length;
-    const actualIndex = ((activeIndex % len) + len) % len;
-    const game = games[actualIndex];
-    if (!game.embedUrl) return;
-    setSelectedGame(game);
+    if (!currentGame.embedUrl) return;
+    setSelectedGame(currentGame);
     playSound("select");
-  }, [activeIndex, selectedGame]);
+  }, [currentGame, selectedGame]);
 
-  const handleClose = () => setSelectedGame(null);
+  const handleClose = useCallback(() => {
+    setSelectedGame(null);
+  }, []);
 
   // --- KEYBOARD ---
   useEffect(() => {
@@ -100,21 +101,14 @@ const GamesConsole = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleNavigate, handleSelect]);
-
-  // --- RENDER LOGIC ---
-  const getGame = (index: number) => {
-    const len = games.length;
-    const wrappedIndex = ((index % len) + len) % len;
-    return games[wrappedIndex];
-  };
+  }, [handleNavigate, handleSelect, handleClose]);
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#EBEBEB] text-gray-900 transition-colors duration-300 dark:bg-[#2D2D2D] dark:text-white">
       <div className="pointer-events-none absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
-            key={currentGame.title} // Uses memoized game
+            key={currentGame.title}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -127,7 +121,7 @@ const GamesConsole = () => {
                 alt={currentGame.title + " thumbnail"}
                 fill
                 className="scale-110 object-cover opacity-40"
-                loading="lazy"
+                loading="eager"
                 quality={50}
               />
             ) : (
@@ -151,7 +145,7 @@ const GamesConsole = () => {
       />
 
       <ControlButtons
-        activeGameData={getGame(activeIndex)}
+        activeGameData={currentGame}
         onSelect={handleSelect}
         isMobile={isMobile}
       />

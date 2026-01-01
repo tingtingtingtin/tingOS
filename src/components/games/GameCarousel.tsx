@@ -211,7 +211,7 @@ const GameCarousel = ({
                       ? handleSelect()
                       : onNavigate(offset)
                   }
-                  className={`group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"} ${isLaunching && isCenter ? "ring-12 ring-white/50 duration-150 ease-in-out transition-all" : ""} `}
+                  className={`group relative h-full w-full cursor-pointer bg-white dark:bg-gray-800 ${isCenter ? "z-20" : "z-10 brightness-90 grayscale-[0.1]"} ${isLaunching && isCenter ? "ring-12 ring-white/50 transition-all duration-150 ease-in-out" : ""} `}
                 >
                   {/* Card */}
                   <div

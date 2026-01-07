@@ -44,4 +44,11 @@ export const projects: Project[] = [
     demoUrl: "https://almondcrumbs.itch.io/tricks-on-it",
     tech: ["Unity", "C#"],
   },
+  {
+    title: "Three.js Gaussian Splat Renderer",
+    description:
+      "WIP: A personal attempt to learn Gaussian Splatting by building a custom renderer with Three.js.",
+    repoUrl: "https://github.com/tingtingtingtin/threejs-gs-framework",
+    tech: ["Three.js", "TypeScript", "GLSL", "Web Workers"],
+  },
 ];

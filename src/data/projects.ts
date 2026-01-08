@@ -48,7 +48,7 @@ export const projects: Project[] = [
     title: "Three.js Gaussian Splat Renderer",
     description:
       "WIP: A personal attempt to learn Gaussian Splatting by building a custom renderer with Three.js.",
-    repoUrl: "https://github.com/tingtingtingtin/threejs-gs-framework",
+    repoUrl: "https://github.com/tingtingtingtin/threejs-splat",
     tech: ["Three.js", "TypeScript", "GLSL", "Web Workers"],
   },
 ];

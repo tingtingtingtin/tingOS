@@ -58,7 +58,10 @@ const BootManager = () => {
 
   useEffect(() => {
     const userAgent = typeof window !== "undefined" ? navigator.userAgent : "";
-    const isBot = /bot|google|applebot|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(userAgent);
+    const isBot =
+      /bot|google|applebot|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(
+        userAgent,
+      );
 
     if (isBot || sessionStorage.getItem("tingOS_unlocked")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect

@@ -6,7 +6,7 @@ import {
   LucideIcon,
   Twitter,
   MessageCircle,
-  Trash,
+  // Trash,
   Gamepad,
 } from "lucide-react";
 

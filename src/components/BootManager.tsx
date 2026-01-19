@@ -204,11 +204,11 @@ const BootManager = () => {
             >
               <div className="mb-20 flex flex-col items-center">
                 <h1 className="text-9xl font-thin tracking-tighter drop-shadow-lg select-none">
-                  {time.toLocaleTimeString([], {
+                  {time ? time.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: false,
-                  })}
+                  }) : "00:00" }
                 </h1>
                 <p className="mt-2 text-3xl font-light drop-shadow-md select-none">
                   {time.toLocaleDateString([], {

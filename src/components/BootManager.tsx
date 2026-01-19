@@ -59,7 +59,7 @@ const BootManager = () => {
   useEffect(() => {
     const userAgent = typeof window !== "undefined" ? navigator.userAgent : "";
     const isBot =
-      /bot|google|applebot|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(
+      /bot|google|applebot|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse|chrome-lighthouse|headlesschrome/i.test(
         userAgent,
       );
 

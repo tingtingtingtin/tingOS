@@ -48,14 +48,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <script
-        id="person-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          id="person-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
         <MotionProvider>
           <ThemeProvider>
             <BootManager />

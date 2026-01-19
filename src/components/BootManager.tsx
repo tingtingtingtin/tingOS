@@ -37,6 +37,7 @@ const BootManager = () => {
   // Loading States
   const [isBooting, setIsBooting] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const router = useRouter();
 
@@ -57,13 +58,15 @@ const BootManager = () => {
   }, [router]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasMounted(true);
     const userAgent = typeof window !== "undefined" ? navigator.userAgent : "";
-    const isBot = /bot|google|googlebot|applebot|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse|chrome-lighthouse|headlesschrome|linkedinbot|twitterbot|facebookexternalhit|discordbot|slackbot|whatsapp/i.test(
-      userAgent
-    );
+    const isBot =
+      /bot|google|googlebot|applebot|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse|chrome-lighthouse|headlesschrome|linkedinbot|twitterbot|facebookexternalhit|discordbot|slackbot|whatsapp/i.test(
+        userAgent,
+      );
 
     if (isBot || sessionStorage.getItem("tingOS_unlocked")) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setView("booted");
     } else {
       setView("lock");
@@ -203,18 +206,22 @@ const BootManager = () => {
             >
               <div className="mb-20 flex flex-col items-center">
                 <h1 className="text-9xl font-thin tracking-tighter drop-shadow-lg select-none">
-                  {time ? time.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  }) : "00:00" }
+                  {!hasMounted
+                    ? "00:00"
+                    : time?.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })}
                 </h1>
                 <p className="mt-2 text-3xl font-light drop-shadow-md select-none">
-                  {time.toLocaleDateString([], {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {!hasMounted
+                    ? ""
+                    : time?.toLocaleDateString([], {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                      })}
                 </p>
               </div>
 

@@ -2,7 +2,6 @@
 
 import { MotionConfig } from "motion/react";
 import { useOSStore } from "@/store/osStore";
-import { useEffect } from "react";
 
 export default function MotionProvider({
   children,
@@ -10,9 +9,6 @@ export default function MotionProvider({
   children: React.ReactNode;
 }) {
   const reducedMotion = useOSStore((state) => state.reducedMotion);
-  useEffect(() => {
-    console.log("Motion reduced: ", reducedMotion);
-  }, [reducedMotion]);
 
   return (
     <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>

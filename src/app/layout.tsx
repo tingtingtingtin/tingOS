@@ -10,7 +10,6 @@ import Wallpaper from "@/components/Wallpaper";
 import TitleBlinker from "@/components/TitleBlinker";
 import BootManager from "@/components/BootManager";
 import { personSchema } from "@/utils/personSchema";
-import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +48,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <script
+        id="person-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -63,11 +67,6 @@ export default function RootLayout({
             <SpeedInsights />
           </ThemeProvider>
         </MotionProvider>
-        <Script
-          id="person-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-        />
       </body>
     </html>
   );

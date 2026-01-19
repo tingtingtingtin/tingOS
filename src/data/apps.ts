@@ -55,14 +55,14 @@ export const apps: AppConfig[] = [
     route: "/resume",
     isPinned: false,
   },
-  {
-    id: "old",
-    label: "Old Site",
-    icon: Trash,
-    route: "/",
-    url: "https://tingx.vercel.app/",
-    isPinned: false,
-  },
+  // {
+  //   id: "old",
+  //   label: "Old Site",
+  //   icon: Trash,
+  //   route: "/",
+  //   url: "https://tingx.vercel.app/",
+  //   isPinned: false,
+  // },
   {
     id: "terminal",
     label: "Terminal",

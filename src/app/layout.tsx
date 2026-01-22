@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     default: "tingOS",
     template: "tingOS:%s",
   },
+  metadataBase: new URL("https://tingwu.dev"),
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [
       {

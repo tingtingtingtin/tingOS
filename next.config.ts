@@ -36,6 +36,21 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: false,
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.tingwu.dev",
+          },
+        ],
+        destination: "https://tingwu.dev/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

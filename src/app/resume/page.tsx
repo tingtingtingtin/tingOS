@@ -8,7 +8,6 @@ const ResumeApp = () => {
   const FILE_ID = "14sv3Ej12WkwxC-M8K7bGQB_WE8ZpZxtY";
   const viewUrl = `https://drive.google.com/file/d/${FILE_ID}/preview`;
   const downloadUrl = `https://drive.google.com/uc?export=download&id=${FILE_ID}`;
-  // const originalUrl = `https://drive.google.com/file/d/${FILE_ID}/view?usp=sharing`;
 
   const [loading, setLoading] = useState(true);
   return (
@@ -23,15 +22,6 @@ const ResumeApp = () => {
             <Download size={14} />
             <span>Download</span>
           </a>
-          {/* <a
-            href={originalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded bg-blue-600 px-3 py-1.5 text-sm text-white transition-colors hover:bg-blue-500"
-          >
-            <ExternalLink size={14} />
-            <span>Open Original</span>
-          </a> */}
         </div>
 
         {loading && (

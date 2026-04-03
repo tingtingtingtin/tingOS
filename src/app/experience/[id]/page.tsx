@@ -6,7 +6,6 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-// Ensure static generation for all tweet IDs
 export async function generateStaticParams() {
   return tweets.map((tweet) => ({
     id: tweet.id,

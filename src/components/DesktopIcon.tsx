@@ -23,7 +23,8 @@ const DesktopIcon = ({
   const router = useRouter();
   const [isSelected, setIsSelected] = useState(false);
   const iconRef = useRef<HTMLButtonElement>(null);
-  const { launchApp, darkMode } = useOSStore();
+  const launchApp = useOSStore((s) => s.launchApp);
+  const darkMode = useOSStore((s) => s.darkMode);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

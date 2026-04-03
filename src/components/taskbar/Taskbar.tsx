@@ -18,22 +18,19 @@ import TimeDisplay from "./TimeDisplay";
 import SettingsPanel from "./SettingsPanel";
 import AppIcon from "./AppIcon";
 import MobileTabsOverlay from "./MobileTabsOverlay";
+import { isRouteActive } from "@/utils/utils";
 
 const Taskbar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { runningApps, launchApp } = useOSStore();
-
-  // Settings Store
-  const reducedMotion = useOSStore((s) => s.reducedMotion);
-  const toggleMotion = useOSStore((s) => s.toggleMotion);
-  const darkMode = useOSStore((s) => s.darkMode);
-  const toggleDarkMode = useOSStore((s) => s.toggleDarkMode);
-
-  const isRouteActive = (route: string) => {
-    if (route === "/") return pathname === "/";
-    return pathname === route || pathname.startsWith(`${route}/`);
-  };
+  const {
+    runningApps,
+    launchApp,
+    reducedMotion,
+    toggleMotion,
+    darkMode,
+    toggleDarkMode,
+  } = useOSStore();
 
   // UI States
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -67,7 +64,7 @@ const Taskbar = () => {
 
   const handleAppClick = (appId: string, route: string) => {
     setMobileTabsOpen(false);
-    const isActive = isRouteActive(route);
+    const isActive = isRouteActive(route, pathname);
     if (isActive) {
       router.push("/");
     } else {
@@ -99,7 +96,7 @@ const Taskbar = () => {
         {/* App Icons */}
         <div className="flex items-center gap-2">
           {desktopTaskbarApps.map((app) => {
-            const isActive = isRouteActive(app.route);
+            const isActive = isRouteActive(app.route, pathname);
             const isRunning = runningApps.includes(app.id);
 
             return (
@@ -240,7 +237,7 @@ const Taskbar = () => {
         )}
       </AnimatePresence>
 
-      {/* MOBILE TABS OVERLAY (Refactored) */}
+      {/* MOBILE TABS OVERLAY */}
       <MobileTabsOverlay
         isOpen={mobileTabsOpen}
         onClose={() => setMobileTabsOpen(false)}

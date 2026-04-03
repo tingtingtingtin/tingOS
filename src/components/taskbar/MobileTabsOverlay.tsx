@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { apps } from "@/data/apps";
 import { useOSStore } from "@/store/osStore";
 import { FaTimes } from "react-icons/fa";
+import { isRouteActive } from "@/utils/utils";
 
 interface MobileTabsOverlayProps {
   isOpen: boolean;
@@ -21,11 +22,6 @@ const MobileTabsOverlay = ({
   const router = useRouter();
   const runningApps = useOSStore((s) => s.runningApps);
   const closeApp = useOSStore((s) => s.closeApp);
-
-  const isRouteActive = (route: string) => {
-    if (route === "/") return pathname === "/";
-    return pathname === route || pathname.startsWith(`${route}/`);
-  };
 
   const mobileRunningApps = apps.filter((app) => runningApps.includes(app.id));
 
@@ -84,7 +80,7 @@ const MobileTabsOverlay = ({
                     }}
                     onClick={() => onAppClick(app.id, app.route)}
                     className={`flex flex-col items-center justify-center gap-3 rounded-2xl border p-6 transition-all select-none ${
-                      isRouteActive(app.route)
+                      isRouteActive(app.route, pathname)
                         ? "border-blue-500/50 bg-blue-500/20"
                         : "border-white/20 bg-white/40 dark:border-white/10 dark:bg-gray-800/40"
                     } `}
@@ -92,7 +88,7 @@ const MobileTabsOverlay = ({
                     <app.icon
                       size={42}
                       className={
-                        isRouteActive(app.route)
+                        isRouteActive(app.route, pathname)
                           ? "text-blue-600 dark:text-blue-400"
                           : "text-gray-700 dark:text-gray-300"
                       }

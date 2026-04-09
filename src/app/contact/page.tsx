@@ -5,6 +5,7 @@ import WindowFrame from "@/components/WindowFrame";
 import ContactLinks from "../../components/contact/ContactLinks";
 import MessagesList from "../../components/contact/MessagesList";
 import SuggestedActions from "../../components/contact/SuggestedActions";
+import ConfirmationCard from "../../components/contact/ConfirmationCard";
 import InputBar from "../../components/contact/InputBar";
 
 interface Message {
@@ -13,7 +14,13 @@ interface Message {
   text: string;
 }
 
-type Step = "init" | "category" | "details" | "contact" | "complete";
+type Step =
+  | "init"
+  | "category"
+  | "details"
+  | "contact"
+  | "confirm"
+  | "complete";
 
 const MessengerApp = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,7 +44,7 @@ const MessengerApp = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isTyping]);
+  }, [messages, isTyping, step]);
 
   // --- Bot Logic Engine ---
   const botReply = (text: string, nextStep: Step, delay = 1500) => {
@@ -79,48 +86,60 @@ const MessengerApp = () => {
         "contact",
       );
     } else if (step === "contact") {
-      const finalFormData = { ...formData, contact: text };
       setFormData((prev) => ({ ...prev, contact: text }));
-      setIsTyping(true);
-      setIsSending(true);
+      setStep("confirm");
+    }
+  };
 
-      try {
-        const response = await fetch("/api/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(finalFormData),
-        });
+  const handleConfirmSend = async () => {
+    setIsSending(true);
+    setIsTyping(true);
 
-        setIsTyping(false);
+    try {
+      const response = await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-        if (response.ok) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: crypto.randomUUID(),
-              sender: "bot",
-              text: "System: Message delivered. I'll get back to you soon!",
-            },
-          ]);
-          setStep("complete");
-        } else {
-          throw new Error("SMTP_FAIL");
-        }
-      } catch (err) {
-        setIsTyping(false);
-        console.log(err);
+      setIsTyping(false);
+
+      if (response.ok) {
         setMessages((prev) => [
           ...prev,
           {
             id: crypto.randomUUID(),
             sender: "bot",
-            text: "⚠️ System Error: Failed to send message. Please try again or use the direct contact links above.",
+            text: "Message delivered. I'll get back to you soon!",
           },
         ]);
-      } finally {
-        setIsSending(false);
+        setStep("complete");
+      } else {
+        throw new Error("SMTP_FAIL");
       }
+    } catch (err) {
+      setIsTyping(false);
+      console.log(err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          sender: "bot",
+          text: "Error: Failed to send message. Please try again or use the direct contact links above.",
+        },
+      ]);
+      setStep("complete");
+    } finally {
+      setIsSending(false);
     }
+  };
+
+  const handleStartOver = () => {
+    setMessages([]);
+    setFormData({ category: "", message: "", contact: "" });
+    setInputValue("");
+    introRun.current = false;
+    setStep("init");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -133,16 +152,22 @@ const MessengerApp = () => {
         {/* --- Chat Area --- */}
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
           <ContactLinks />
-          <MessagesList
-            messages={messages}
-            isTyping={isTyping}
-            messagesEndRef={messagesEndRef}
-          />
+          <MessagesList messages={messages} isTyping={isTyping} />
+          {step === "confirm" && (
+            <ConfirmationCard
+              category={formData.category}
+              message={formData.message}
+              contact={formData.contact}
+              isSending={isSending}
+              onConfirm={handleConfirmSend}
+              onStartOver={handleStartOver}
+            />
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* --- Input Area --- */}
         <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-          {/* Suggested Actions */}
           <SuggestedActions
             visible={step === "category" && !isTyping}
             options={[
@@ -153,18 +178,27 @@ const MessengerApp = () => {
             onSelect={(opt: string) => handleSend(opt)}
           />
 
-          {/* Text Input */}
           <InputBar
             inputValue={inputValue}
             onInputChange={setInputValue}
             onKeyDown={handleKeyDown}
             onSend={() => handleSend(inputValue)}
             placeholder={
-              step === "complete" ? "Conversation closed." : "Type a message..."
+              step === "complete"
+                ? "Conversation closed."
+                : step === "confirm"
+                  ? "Confirm or start over above."
+                  : "Type a message..."
             }
-            disabledInput={step === "complete" || isTyping}
+            disabledInput={
+              step === "complete" || step === "confirm" || isTyping
+            }
             disabledSend={
-              !inputValue.trim() || step === "complete" || isTyping || isSending
+              !inputValue.trim() ||
+              step === "complete" ||
+              step === "confirm" ||
+              isTyping ||
+              isSending
             }
             isSending={isSending}
           />

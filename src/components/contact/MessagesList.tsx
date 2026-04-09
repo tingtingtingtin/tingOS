@@ -2,16 +2,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { Bot } from "lucide-react";
 import TypingIndicator from "./TypingIndicator";
 import MessageItem, { Message } from "./MessageItem";
-import { RefObject } from "react";
 
 const MessagesList = ({
   messages,
   isTyping,
-  messagesEndRef,
 }: {
   messages: Message[];
   isTyping: boolean;
-  messagesEndRef: RefObject<HTMLDivElement | null>;
 }) => (
   <div className="space-y-4">
     <AnimatePresence initial={false}>
@@ -34,8 +31,6 @@ const MessagesList = ({
         </div>
       </motion.div>
     )}
-
-    <div ref={messagesEndRef} />
   </div>
 );
 

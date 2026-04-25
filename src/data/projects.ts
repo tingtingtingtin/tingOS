@@ -29,13 +29,13 @@ export const projects: Project[] = [
     demoUrl: "https://www.generositree.co/",
     tech: ["Next.js", "Firebase", "TypeScript", "TailwindCSS", "Three.js"],
   },
-  {
-    title: "Hurdle",
-    description: "A spin-off of the popular word game, Wordle.",
-    repoUrl: "https://github.com/tingtingtingtin/hurdle",
-    demoUrl: "https://hurdle-vert.vercel.app",
-    tech: ["Vite", "React", "Express"],
-  },
+  // {
+  //   title: "Hurdle",
+  //   description: "A spin-off of the popular word game, Wordle.",
+  //   repoUrl: "https://github.com/tingtingtingtin/hurdle",
+  //   demoUrl: "https://hurdle-vert.vercel.app",
+  //   tech: ["Vite", "React", "Express"],
+  // },
   {
     title: "TricksOnIt",
     description:
@@ -45,10 +45,18 @@ export const projects: Project[] = [
     tech: ["Unity", "C#"],
   },
   {
-    title: "Three.js Gaussian Splat Renderer",
+    title: "SplatKit",
     description:
-      "WIP: A personal attempt to learn Gaussian Splatting by building a custom renderer with Three.js.",
-    repoUrl: "https://github.com/tingtingtingtin/threejs-splat",
+      "Gaussian Splat renderer built with Three.js, TypeScript, GLSL, and Web Workers",
+    repoUrl: "https://github.com/tingtingtingtin/splatkit",
+    demoUrl: "https://splatkit.vercel.app",
     tech: ["Three.js", "TypeScript", "GLSL", "Web Workers"],
+  },
+  {
+    title: "CounselCoach",
+    description: "AI patient simulator for therapist development",
+    repoUrl: "https://github.com/tingtingtingtin/CounselCoach",
+    demoUrl: "https://counselcoach.tech",
+    tech: ["Next.js", "React", "Gemini", "ElevenLabs"],
   },
 ];

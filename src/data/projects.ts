@@ -26,7 +26,7 @@ export const projects: Project[] = [
     description:
       "An image sharing platform for inspiring environmental impact.",
     repoUrl: "https://github.com/tingtingtingtin/generositree",
-    demoUrl: "https://www.generositree.co/",
+    demoUrl: "https://generositree.vercel.app/",
     tech: ["Next.js", "Firebase", "TypeScript", "TailwindCSS", "Three.js"],
   },
   // {

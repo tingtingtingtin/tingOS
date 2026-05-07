@@ -11,11 +11,14 @@ export const DesktopEraserButton = ({
   mode,
   onModeChange,
 }: DesktopEraserButtonProps) => {
+  const handleToggle = () => {
+    const newMode: ToolMode = mode === "eraser" ? "brush" : "eraser";
+    onModeChange(newMode);
+  };
+
   return (
     <button
-      onClick={() =>
-        onModeChange((prev) => (prev === "eraser" ? "brush" : "eraser"))
-      }
+      onClick={handleToggle}
       aria-pressed={mode === "eraser"}
       title={mode === "eraser" ? "Disable Eraser" : "Enable Eraser"}
       className={`hidden rounded-lg p-3 transition-transform hover:cursor-pointer md:block ${

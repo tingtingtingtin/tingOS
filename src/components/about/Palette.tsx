@@ -17,6 +17,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import NotebookDecor from "./NotebookDecor";
 import BrushSizeSlider from "./BrushSizeSlider";
+import { useOSStore } from "@/store/osStore";
 
 const COLORS = [
   "#000000", // Black
@@ -33,10 +34,11 @@ type ToolMode = "hand" | "brush" | "eraser";
 const Palette = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const darkMode = useOSStore((s) => s.darkMode);
 
   // --- State Management ---
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState("#000000");
+  const [color, setColor] = useState(() => (darkMode ? "#FFFFFF" : "#000000"));
   const [lineWidth, setLineWidth] = useState(8);
 
   const [mode, setMode] = useState<ToolMode>("hand");
@@ -354,7 +356,7 @@ const Palette = () => {
                 setColor(c);
                 setMode("brush");
               }}
-              className={`h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 ${color === c ? "scale-110 border-gray-400 shadow-md" : "border-transparent"}`}
+              className={`h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 hover:cursor-pointer ${color === c ? "scale-110 border-gray-400 shadow-md" : "border-transparent"}`}
               style={{ backgroundColor: c }}
               title={c}
             />
@@ -459,8 +461,8 @@ const Palette = () => {
               setMode((prev) => (prev === "eraser" ? "brush" : "eraser"))
             }
             aria-pressed={mode === "eraser"}
-            title="Eraser"
-            className={`hidden rounded-lg p-3 transition-transform md:block ${
+            title={mode === "eraser" ? "Disable Eraser" : "Enable Eraser"}
+            className={`hidden rounded-lg p-3 transition-transform hover:cursor-pointer md:block ${
               mode === "eraser"
                 ? "scale-105 bg-gray-100 shadow-md dark:bg-gray-700"
                 : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -471,7 +473,7 @@ const Palette = () => {
 
           <button
             onClick={clearCanvas}
-            className="rounded-lg p-3 text-gray-500 transition-colors active:bg-red-50 active:text-red-500 md:mt-auto md:mb-20 md:hover:bg-red-50 md:hover:text-red-500"
+            className="rounded-lg p-3 text-gray-500 transition-colors hover:cursor-pointer active:bg-red-50 active:text-red-500 md:mt-auto md:mb-20 md:hover:bg-red-50 md:hover:text-red-500"
             title="Clear Canvas"
           >
             <RefreshCw size={20} />

@@ -4,18 +4,16 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  RefreshCw,
-  Eraser,
-  Hand,
-  PenLine,
-  Settings2,
-  Palette as PaletteIcon,
-} from "lucide-react";
+import { Settings2, Palette as PaletteIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import NotebookDecor from "./NotebookDecor";
 import BrushSizeSlider from "./BrushSizeSlider";
 import { useCanvasDraw } from "./useCanvasDraw";
+import { ToolModeSegment } from "./ToolModeSegment";
+import { DesktopColorColumn } from "./DesktopColorColumn";
+import { DesktopEraserButton } from "./DesktopEraserButton";
+import { ClearCanvasButton } from "./ClearCanvasButton";
+import { BrushCursor } from "./BrushCursor";
 
 const COLORS = [
   "#000000", // Black
@@ -57,55 +55,15 @@ const Palette = () => {
       {/* --- Toolbar --- */}
       <aside className="z-20 flex w-full shrink-0 flex-row items-center justify-between border-t border-gray-200 bg-white px-4 py-3 pb-4 shadow-sm md:h-full md:w-24 md:flex-col md:justify-start md:overflow-hidden md:border-t-0 md:border-r md:py-6 dark:border-gray-800 dark:bg-gray-800">
         {/* MOBILE: Segmented Control (Hand | Brush | Eraser) */}
-        <div className="flex items-center rounded-2xl bg-gray-100 p-1 md:hidden dark:bg-gray-700/50">
-          <button
-            onClick={() => setMode("hand")}
-            className={`rounded-xl px-4 py-2 transition-all ${
-              mode === "hand"
-                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
-                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            }`}
-          >
-            <Hand size={20} />
-          </button>
-          <button
-            onClick={() => setMode("brush")}
-            className={`rounded-xl px-4 py-2 transition-all ${
-              mode === "brush"
-                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
-                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            }`}
-          >
-            <PenLine size={20} />
-          </button>
-          <button
-            onClick={() => setMode("eraser")}
-            className={`rounded-xl px-4 py-2 transition-all ${
-              mode === "eraser"
-                ? "bg-white text-blue-600 shadow-sm dark:bg-gray-600 dark:text-blue-400"
-                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            }`}
-          >
-            <Eraser size={20} />
-          </button>
-        </div>
+        <ToolModeSegment mode={mode} onModeChange={setMode} />
 
         {/* DESKTOP: Color Column (Hidden on Mobile) */}
-        <div className="hidden flex-col gap-3 overflow-visible px-0 md:flex">
-          {COLORS.map((c) => (
-            <button
-              key={c}
-              onClick={() => {
-                setColor(c);
-                setMode("brush");
-              }}
-              className={`h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 hover:cursor-pointer ${color === c ? "scale-110 border-gray-400 shadow-md" : "border-transparent"}`}
-              style={{ backgroundColor: c }}
-              title={c}
-            />
-          ))}
-          <div className="my-2 h-px w-8 bg-gray-300 dark:bg-gray-700" />
-        </div>
+        <DesktopColorColumn
+          colors={COLORS}
+          currentColor={color}
+          onColorSelect={setColor}
+          onModeChange={() => setMode("brush")}
+        />
 
         {/* MOBILE: Right Side - Action Groups */}
         <div className="flex items-center gap-2 md:w-full md:flex-col md:gap-4">
@@ -199,28 +157,9 @@ const Palette = () => {
           </div>
 
           {/* Desktop Eraser Button */}
-          <button
-            onClick={() =>
-              setMode((prev) => (prev === "eraser" ? "brush" : "eraser"))
-            }
-            aria-pressed={mode === "eraser"}
-            title={mode === "eraser" ? "Disable Eraser" : "Enable Eraser"}
-            className={`hidden rounded-lg p-3 transition-transform hover:cursor-pointer md:block ${
-              mode === "eraser"
-                ? "scale-105 bg-gray-100 shadow-md dark:bg-gray-700"
-                : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            <Eraser size={20} />
-          </button>
+          <DesktopEraserButton mode={mode} onModeChange={setMode} />
 
-          <button
-            onClick={clearCanvas}
-            className="rounded-lg p-3 text-gray-500 transition-colors hover:cursor-pointer active:bg-red-50 active:text-red-500 md:mt-auto md:mb-20 md:hover:bg-red-50 md:hover:text-red-500"
-            title="Clear Canvas"
-          >
-            <RefreshCw size={20} />
-          </button>
+          <ClearCanvasButton onClear={clearCanvas} />
         </div>
       </aside>
 
@@ -241,34 +180,17 @@ const Palette = () => {
         />
 
         {/* Brush Cursor (only on fine-pointer devices) */}
-        {hasFinePointer && mode !== "hand" && pointerInside && cursor && (
-          <motion.div
-            initial={false}
-            animate={{ x: cursor.x, y: cursor.y }}
-            transition={{
-              type: "tween",
-              ease: "linear",
-              duration: 0,
-            }}
-            className="pointer-events-none fixed z-50 hidden md:block"
-            style={{
-              left: containerRef.current?.getBoundingClientRect().left ?? 0,
-              top: containerRef.current?.getBoundingClientRect().top ?? 0,
-            }}
-          >
-            <div
-              style={{
-                width: Math.max(8, lineWidth + 6),
-                height: Math.max(8, lineWidth + 6),
-                marginLeft: -Math.max(8, lineWidth + 6) / 2,
-                marginTop: -Math.max(8, lineWidth + 6) / 2,
-                borderRadius: "9999px",
-                background: mode === "eraser" ? "rgba(255,255,255,0.6)" : color,
-                border: "2px solid rgba(0,0,0,0.25)",
-              }}
-            />
-          </motion.div>
-        )}
+        <BrushCursor
+          lineWidth={lineWidth}
+          color={color}
+          mode={mode}
+          cursor={cursor}
+          show={hasFinePointer && mode !== "hand" && pointerInside}
+          containerLeft={
+            containerRef.current?.getBoundingClientRect().left ?? 0
+          }
+          containerTop={containerRef.current?.getBoundingClientRect().top ?? 0}
+        />
       </div>
     </div>
   );

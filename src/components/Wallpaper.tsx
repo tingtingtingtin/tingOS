@@ -17,7 +17,6 @@ const Wallpaper = () => {
           alt=""
           fill
           priority
-          quality={80}
           style={{ objectFit: "cover" }}
         />
       </div>
@@ -30,7 +29,6 @@ const Wallpaper = () => {
           src="/wallpapers/light.jpg"
           alt=""
           fill
-          quality={80}
           style={{ objectFit: "cover" }}
         />
       </div>

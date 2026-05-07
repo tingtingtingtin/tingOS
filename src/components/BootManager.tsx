@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { User, ChevronUp, ArrowRight, Lock, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -57,21 +57,17 @@ const BootManager = () => {
     });
   }, [router]);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHasMounted(true);
-    const userAgent = typeof window !== "undefined" ? navigator.userAgent : "";
+  useLayoutEffect(() => {
     const isBot =
       /bot|google|googlebot|applebot|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse|chrome-lighthouse|headlesschrome|linkedinbot|twitterbot|facebookexternalhit|discordbot|slackbot|whatsapp/i.test(
-        userAgent,
+        navigator.userAgent,
       );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasMounted(true);
+    setView(isBot || sessionStorage.getItem("tingOS_unlocked") ? "booted" : "lock");
+  }, []);
 
-    if (isBot || sessionStorage.getItem("tingOS_unlocked")) {
-      setView("booted");
-    } else {
-      setView("lock");
-    }
-
+  useEffect(() => {
     const handleLockEvent = () => {
       setView("lock");
       setSelectedUser("guest");
@@ -154,7 +150,7 @@ const BootManager = () => {
     }
   };
 
-  if (view === "init" || view === "booted") return null;
+  if (view === "booted" || view === "init") return null;
 
   return (
     <AnimatePresence>
@@ -169,7 +165,7 @@ const BootManager = () => {
           className="absolute inset-0 -z-20 scale-105 bg-cover bg-center"
           style={{
             backgroundImage:
-              'url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=3000")',
+              'url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1920")',
           }}
         />
 

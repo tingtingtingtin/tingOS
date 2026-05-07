@@ -14,6 +14,21 @@ export const projects: Project[] = [
     tech: ["Next.js", "Webhooks", "TailwindCSS", "Zustand", "Motion"],
   },
   {
+    title: "SplatKit",
+    description:
+      "Gaussian Splat renderer built with Three.js, TypeScript, GLSL, and Web Workers",
+    repoUrl: "https://github.com/tingtingtingtin/splatkit",
+    demoUrl: "https://splatkit.vercel.app",
+    tech: ["Three.js", "TypeScript", "GLSL", "Web Workers"],
+  },
+  {
+    title: "CounselCoach",
+    description: "AI patient simulator for therapist development",
+    repoUrl: "https://github.com/tingtingtingtin/CounselCoach",
+    demoUrl: "https://counselcoach.tech",
+    tech: ["Next.js", "React", "Gemini", "ElevenLabs"],
+  },
+  {
     title: "Garbogotchi",
     description:
       "Gamified trash-sorting app with virtual pet mechanics and hardware integration. Won 2nd Place at CitrusHack 2025.",
@@ -29,13 +44,6 @@ export const projects: Project[] = [
     demoUrl: "https://generositree.vercel.app/",
     tech: ["Next.js", "Firebase", "TypeScript", "TailwindCSS", "Three.js"],
   },
-  // {
-  //   title: "Hurdle",
-  //   description: "A spin-off of the popular word game, Wordle.",
-  //   repoUrl: "https://github.com/tingtingtingtin/hurdle",
-  //   demoUrl: "https://hurdle-vert.vercel.app",
-  //   tech: ["Vite", "React", "Express"],
-  // },
   {
     title: "TricksOnIt",
     description:
@@ -45,18 +53,10 @@ export const projects: Project[] = [
     tech: ["Unity", "C#"],
   },
   {
-    title: "SplatKit",
-    description:
-      "Gaussian Splat renderer built with Three.js, TypeScript, GLSL, and Web Workers",
-    repoUrl: "https://github.com/tingtingtingtin/splatkit",
-    demoUrl: "https://splatkit.vercel.app",
-    tech: ["Three.js", "TypeScript", "GLSL", "Web Workers"],
-  },
-  {
-    title: "CounselCoach",
-    description: "AI patient simulator for therapist development",
-    repoUrl: "https://github.com/tingtingtingtin/CounselCoach",
-    demoUrl: "https://counselcoach.tech",
-    tech: ["Next.js", "React", "Gemini", "ElevenLabs"],
+    title: "Hurdle",
+    description: "A spin-off of the popular word game, Wordle.",
+    repoUrl: "https://github.com/tingtingtingtin/hurdle",
+    demoUrl: "https://hurdle-vert.vercel.app",
+    tech: ["Vite", "React", "Express"],
   },
 ];

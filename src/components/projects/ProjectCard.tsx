@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GitCommit, ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
+import PreviewModal from "@/components/projects/PreviewModal";
 
 interface ProjectCardProps {
   title: string;
@@ -45,6 +46,7 @@ const ProjectCard = ({
               <FaGithub size={20} />
             </Link>
           )}
+          {demoUrl && <PreviewModal title={title} demoUrl={demoUrl} />}
           {demoUrl && (
             <Link
               href={demoUrl}

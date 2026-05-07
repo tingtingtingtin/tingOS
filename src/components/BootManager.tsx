@@ -72,9 +72,6 @@ const BootManager = () => {
       setView("lock");
     }
 
-    setTime(new Date());
-    const timer = setInterval(() => setTime(new Date()), 1000);
-
     const handleLockEvent = () => {
       setView("lock");
       setSelectedUser("guest");
@@ -84,10 +81,17 @@ const BootManager = () => {
     window.addEventListener("os-lock", handleLockEvent);
 
     return () => {
-      clearInterval(timer);
       window.removeEventListener("os-lock", handleLockEvent);
     };
-  }, [prefetchEverything]);
+  }, []);
+
+  useEffect(() => {
+    if (view !== "lock") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTime(new Date());
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, [view]);
 
   const handleUnlock = () => {
     if (view === "lock") setView("login");

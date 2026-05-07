@@ -114,17 +114,14 @@ const BootManager = () => {
   const executeLogin = () => {
     setIsBooting(true);
 
-    let msgIndex = 0;
+    let lastIndex = 0;
     const msgInterval = setInterval(() => {
       let nextIndex: number;
       do {
         nextIndex = Math.floor(Math.random() * LOADING_MESSAGES.length);
-      } while (
-        LOADING_MESSAGES[nextIndex] === loadingMsg &&
-        LOADING_MESSAGES.length > 1
-      );
-      msgIndex = nextIndex;
-      setLoadingMsg(LOADING_MESSAGES[msgIndex]);
+      } while (nextIndex === lastIndex && LOADING_MESSAGES.length > 1);
+      lastIndex = nextIndex;
+      setLoadingMsg(LOADING_MESSAGES[nextIndex]);
     }, 800);
     setTimeout(() => playStartupSound(), 500);
 

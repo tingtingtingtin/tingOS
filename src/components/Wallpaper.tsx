@@ -1,27 +1,45 @@
 "use client";
 
+import Image from "next/image";
 import { useOSStore } from "@/store/osStore";
 
 const Wallpaper = () => {
   const darkMode = useOSStore((s) => s.darkMode);
 
-  const darkUrl =
-    "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&q=80&w=3000";
-  const lightUrl =
-    "https://images.unsplash.com/photo-1543241964-2aff6a70473f?auto=format&fit=crop&q=80&w=3000";
-
   return (
-    <div
-      className="fixed inset-0 -z-10 bg-cover bg-center transition-all duration-700"
-      style={{
-        backgroundImage: `url("${darkMode ? darkUrl : lightUrl}")`,
-      }}
-    >
+    <div className="fixed inset-0 -z-10">
       <div
-        className={`absolute inset-0 transition-opacity duration-700 ${
+        className="absolute inset-0 overflow-hidden transition-opacity duration-500"
+        style={{ opacity: darkMode ? 1 : 0 }}
+      >
+        <Image
+          src="/wallpapers/dark.jpg"
+          alt=""
+          fill
+          priority
+          quality={80}
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+
+      <div
+        className="absolute inset-0 overflow-hidden transition-opacity duration-500"
+        style={{ opacity: darkMode ? 0 : 1 }}
+      >
+        <Image
+          src="/wallpapers/light.jpg"
+          alt=""
+          fill
+          quality={80}
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${
           darkMode
-            ? "bg-black/40" // Darken for dark mode
-            : "bg-white/50 bg-linear-to-t from-white/10 via-transparent to-white/30 md:bg-transparent" // Soft contrast for light mode
+            ? "bg-black/40"
+            : "bg-white/50 bg-linear-to-t from-white/10 via-transparent to-white/30 md:bg-transparent"
         }`}
       />
     </div>

@@ -45,6 +45,7 @@ const DraggableWindow = ({
 
   const handleHeaderPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
+    if ((e.target as Element).closest("button")) return;
     const startX = e.clientX - left.get();
     const startY = e.clientY - top.get();
     const el = e.currentTarget;

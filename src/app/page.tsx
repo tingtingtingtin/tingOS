@@ -15,14 +15,18 @@ const Desktop = () => {
         className="relative z-10 grid w-full grid-cols-3 justify-items-center gap-x-2 gap-y-6 md:w-fit md:grid-flow-col md:auto-rows-[110px] md:grid-cols-none md:content-start md:items-start md:justify-items-start md:gap-4"
       >
         {apps.map((app) => (
-          <DesktopIcon
+          <div
             key={app.id}
-            id={app.id}
-            label={app.label}
-            icon={app.icon}
-            route={app.route}
-            url={app.url}
-          />
+            className={app.floating ? "hidden md:contents" : "contents"}
+          >
+            <DesktopIcon
+              id={app.id}
+              label={app.label}
+              icon={app.icon}
+              route={app.route}
+              url={app.url}
+            />
+          </div>
         ))}
       </motion.div>
     </main>

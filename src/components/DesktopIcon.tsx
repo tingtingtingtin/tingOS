@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LucideIcon } from "lucide-react";
 import { useOSStore } from "@/store/osStore";
+import { apps } from "@/data/apps";
 
 interface DesktopIconProps {
   id: string;
@@ -25,6 +26,7 @@ const DesktopIcon = ({
   const iconRef = useRef<HTMLButtonElement>(null);
   const launchApp = useOSStore((s) => s.launchApp);
   const darkMode = useOSStore((s) => s.darkMode);
+  const appConfig = apps.find((a) => a.id === id);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,9 +50,11 @@ const DesktopIcon = ({
       return;
     }
     launchApp(id);
-    setTimeout(() => {
-      router.push(route);
-    }, 50);
+    if (!appConfig?.floating) {
+      setTimeout(() => {
+        router.push(route);
+      }, 50);
+    }
   };
 
   const handleInteraction = () => {

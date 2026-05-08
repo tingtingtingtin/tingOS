@@ -64,6 +64,11 @@ const Taskbar = () => {
 
   const handleAppClick = (appId: string, route: string) => {
     setMobileTabsOpen(false);
+    const app = apps.find((a) => a.id === appId);
+    if (app?.floating) {
+      launchApp(appId);
+      return;
+    }
     const isActive = isRouteActive(route, pathname);
     if (isActive) {
       router.push("/");

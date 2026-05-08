@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Taskbar from "@/components/taskbar/Taskbar";
+import FloatingWindowLayer from "@/components/FloatingWindowLayer";
 import MotionProvider from "@/components/providers/MotionProvider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -67,6 +68,7 @@ export default function RootLayout({
             <Wallpaper />
             {children}
             <Taskbar />
+            <FloatingWindowLayer />
             <Analytics />
             <SpeedInsights />
           </ThemeProvider>

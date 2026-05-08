@@ -8,6 +8,7 @@ import {
   MessageCircle,
   // Trash,
   Gamepad,
+  Sparkles,
 } from "lucide-react";
 
 export interface AppConfig {
@@ -17,6 +18,7 @@ export interface AppConfig {
   route: string;
   isPinned: boolean;
   url?: string;
+  floating?: boolean;
 }
 
 export const apps: AppConfig[] = [
@@ -76,5 +78,13 @@ export const apps: AppConfig[] = [
     icon: Gamepad,
     route: "/games",
     isPinned: false,
+  },
+  {
+    id: "three",
+    label: "cool stuff",
+    icon: Sparkles,
+    route: "/three",
+    isPinned: false,
+    floating: true,
   },
 ];

@@ -82,7 +82,7 @@ jobs:
           workflow: nextjs_bundle_analysis.yml
           branch: ${{ github.event.pull_request.base.ref }}
           name: bundle
-          path: .next/analyze/base
+          path: .next/analyze/base/bundle
 
       # And here's the second place - this runs after we have both the current and
       # base branch bundle stats, and will compare them to determine what changed.

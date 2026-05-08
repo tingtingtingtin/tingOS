@@ -115,7 +115,7 @@ const DraggableWindow = ({
             height: h,
             zIndex: 50,
           }}
-          className="flex flex-col overflow-hidden rounded-t-lg border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
+          className="flex flex-col rounded-t-lg border border-gray-200 shadow-2xl dark:border-gray-800 "
         >
           <div
             ref={headerRef}
@@ -125,7 +125,7 @@ const DraggableWindow = ({
             <Header title={title} onClose={handleClose} />
           </div>
 
-          <div className="relative flex-1 overflow-auto bg-gray-50 dark:bg-gray-950/50">
+          <div className="relative flex-1 overflow-auto ">
             {children}
           </div>
 

@@ -64,7 +64,9 @@ const BootManager = () => {
       );
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasMounted(true);
-    setView(isBot || sessionStorage.getItem("tingOS_unlocked") ? "booted" : "lock");
+    setView(
+      isBot || sessionStorage.getItem("tingOS_unlocked") ? "booted" : "lock",
+    );
   }, []);
 
   useEffect(() => {
